@@ -28,7 +28,11 @@ class AuthDemoSwitcher extends StatelessWidget {
                   color: AppColors.gold,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.flash_on_rounded, size: 12.sp, color: Colors.black),
+                child: Icon(
+                  Icons.flash_on_rounded,
+                  size: 12.sp,
+                  color: Colors.black,
+                ),
               ),
               SizedBox(width: 8.w),
               Text(
@@ -113,10 +117,7 @@ class AuthDemoSwitcher extends StatelessWidget {
                   ),
                   Text(
                     sub,
-                    style: TextStyle(
-                      color: Colors.white54,
-                      fontSize: 8.5.sp,
-                    ),
+                    style: TextStyle(color: Colors.white54, fontSize: 8.5.sp),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

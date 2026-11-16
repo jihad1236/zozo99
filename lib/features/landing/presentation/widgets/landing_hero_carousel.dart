@@ -22,6 +22,7 @@ class LandingHeroCarousel extends StatefulWidget {
 class _LandingHeroCarouselState extends State<LandingHeroCarousel> {
   final PageController _pageController = PageController();
   Timer? _timer;
+  int _currentPage = 0;
 
   final List<Map<String, dynamic>> banners = [
     {
@@ -62,8 +63,7 @@ class _LandingHeroCarouselState extends State<LandingHeroCarousel> {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (_pageController.hasClients) {
-        final nextPage =
-            (widget.controller.carouselIndex.value + 1) % banners.length;
+        final nextPage = (_currentPage + 1) % banners.length;
         _pageController.animateToPage(
           nextPage,
           duration: const Duration(milliseconds: 400),
@@ -71,6 +71,15 @@ class _LandingHeroCarouselState extends State<LandingHeroCarousel> {
         );
       }
     });
+  }
+
+  void _onPageChanged(int index) {
+    if (_currentPage != index) {
+      setState(() {
+        _currentPage = index;
+      });
+      widget.controller.setCarouselIndex(index);
+    }
   }
 
   @override
@@ -88,7 +97,7 @@ class _LandingHeroCarouselState extends State<LandingHeroCarousel> {
           height: 190.h,
           child: PageView.builder(
             controller: _pageController,
-            onPageChanged: widget.controller.setCarouselIndex,
+            onPageChanged: _onPageChanged,
             itemCount: banners.length,
             itemBuilder: (context, index) {
               final b = banners[index];
@@ -285,28 +294,25 @@ class _LandingHeroCarouselState extends State<LandingHeroCarousel> {
           ),
         ),
         SizedBox(height: 8.h),
-        // Dots Indicator
-        Obx(() {
-          final active = widget.controller.carouselIndex.value;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              banners.length,
-              (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                margin: EdgeInsets.symmetric(horizontal: 3.w),
-                width: active == i ? 18.w : 6.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: active == i
-                      ? AppColors.emeraldGreen
-                      : const Color(0xFF2C3545),
-                  borderRadius: BorderRadius.circular(3.r),
-                ),
+        // Localized Dots Indicator (Zero Obx overhead)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            banners.length,
+            (i) => AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: EdgeInsets.symmetric(horizontal: 3.w),
+              width: _currentPage == i ? 18.w : 6.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: _currentPage == i
+                    ? AppColors.emeraldGreen
+                    : const Color(0xFF2C3545),
+                borderRadius: BorderRadius.circular(3.r),
               ),
             ),
-          );
-        }),
+          ),
+        ),
       ],
     );
   }

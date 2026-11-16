@@ -18,18 +18,30 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final AuthController controller = Get.find<AuthController>();
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabChange);
+  }
+
+  void _handleTabChange() {
+    if (_tabController.index != _currentIndex) {
+      setState(() {
+        _currentIndex = _tabController.index;
+      });
+    }
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange);
     _tabController.dispose();
     super.dispose();
   }
@@ -41,58 +53,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Splash Background Image
-          Image.asset(
-            IconPath.splashBg,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: const Color(0xFF080B10),
-            ),
-          ),
+          // 1. Static Background isolated with RepaintBoundary (Zero Overdraw during typing)
+          const _AuthBackground(),
 
-          // 2. Ambient Blurred Orbs for Glassmorphism Reflections
-          Positioned(
-            top: -60.h,
-            left: -40.w,
-            child: Container(
-              width: 240.w,
-              height: 240.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF00B67A).withValues(alpha: 0.18),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 80.h,
-            right: -60.w,
-            child: Container(
-              width: 260.w,
-              height: 260.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFFFFB800).withValues(alpha: 0.12),
-              ),
-            ),
-          ),
-
-          // 3. Dark Vignette Scrim
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF080B10).withValues(alpha: 0.75),
-                  const Color(0xFF080B10).withValues(alpha: 0.88),
-                  const Color(0xFF080B10).withValues(alpha: 0.98),
-                ],
-                stops: const [0.0, 0.45, 1.0],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-
-          // 4. Scrollable Glassmorphic Authentication Content
+          // 2. Interactive Authentication Form
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -104,8 +68,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   const AuthHeader(),
                   SizedBox(height: 16.h),
 
-                  // Quick Demo Credentials Selector
-                  AuthDemoSwitcher(controller: controller),
+                  // // Quick Demo Credentials Selector
+                  // AuthDemoSwitcher(controller: controller),
                   SizedBox(height: 14.h),
 
                   // Central Glassmorphic Form Card
@@ -118,15 +82,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         AuthTabSelector(tabController: _tabController),
                         SizedBox(height: 16.h),
 
-                        // Form Switcher View
-                        AnimatedBuilder(
-                          animation: _tabController.animation ?? _tabController,
-                          builder: (context, child) {
-                            final index = _tabController.index;
-                            return index == 0
-                                ? AuthLoginForm(controller: controller)
-                                : AuthRegisterForm(controller: controller);
-                          },
+                        // Optimized Form Switcher using IndexedStack (Zero Rebuilds on Swipes)
+                        IndexedStack(
+                          index: _currentIndex,
+                          children: [
+                            AuthLoginForm(controller: controller),
+                            AuthRegisterForm(controller: controller),
+                          ],
                         ),
                       ],
                     ),
@@ -137,6 +99,70 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   const AuthSocialFooter(),
                   SizedBox(height: 16.h),
                 ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AuthBackground extends StatelessWidget {
+  const _AuthBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background Image
+          Image.asset(
+            IconPath.splashBg,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                Container(color: const Color(0xFF080B10)),
+          ),
+
+          // Ambient Glow Orbs
+          Positioned(
+            top: -60.h,
+            left: -40.w,
+            child: Container(
+              width: 240.w,
+              height: 240.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF00B67A).withValues(alpha: 0.16),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 80.h,
+            right: -60.w,
+            child: Container(
+              width: 260.w,
+              height: 260.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFFFFB800).withValues(alpha: 0.10),
+              ),
+            ),
+          ),
+
+          // Vignette Scrim
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF080B10).withValues(alpha: 0.75),
+                  const Color(0xFF080B10).withValues(alpha: 0.88),
+                  const Color(0xFF080B10).withValues(alpha: 0.98),
+                ],
+                stops: const [0.0, 0.45, 1.0],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),

@@ -16,7 +16,9 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(LandingController());
+    final controller = Get.isRegistered<LandingController>()
+        ? Get.find<LandingController>()
+        : Get.put(LandingController());
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0D14),
@@ -25,25 +27,59 @@ class LandingScreen extends StatelessWidget {
           color: const Color(0xFF00B67A),
           backgroundColor: const Color(0xFF141923),
           onRefresh: () async {
-            // Trigger quick refresh
-            await Future.delayed(const Duration(milliseconds: 300));
+            await Future.delayed(const Duration(milliseconds: 250));
           },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LandingHeader(controller: controller),
-                LandingHeroCarousel(controller: controller),
-                const LandingTicker(),
-                LandingCategoryBar(controller: controller),
-                LandingGamesGrid(controller: controller),
-                const LandingVipSection(),
-                const LandingSponsorships(),
-                const LandingAmbassadors(),
-                const LandingFooter(),
-              ],
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
+            padding: EdgeInsets.zero,
+            children: [
+              // 1. Header (Logo & Balance/Auth)
+              RepaintBoundary(
+                child: LandingHeader(controller: controller),
+              ),
+
+              // 2. Hero Carousel (Isolated sliding animations)
+              RepaintBoundary(
+                child: LandingHeroCarousel(controller: controller),
+              ),
+
+              // 3. Static Live Ticker Marquee
+              const RepaintBoundary(
+                child: LandingTicker(),
+              ),
+
+              // 4. Interactive Category Bar
+              RepaintBoundary(
+                child: LandingCategoryBar(controller: controller),
+              ),
+
+              // 5. Multi-Provider Games Grid
+              RepaintBoundary(
+                child: LandingGamesGrid(controller: controller),
+              ),
+
+              // 6. VIP Club Section (Cached static layout)
+              const RepaintBoundary(
+                child: LandingVipSection(),
+              ),
+
+              // 7. Official Sponsorships (Cached static layout)
+              const RepaintBoundary(
+                child: LandingSponsorships(),
+              ),
+
+              // 8. Brand Ambassadors (Cached static layout)
+              const RepaintBoundary(
+                child: LandingAmbassadors(),
+              ),
+
+              // 9. Multi-Column Footer & Compliance
+              const RepaintBoundary(
+                child: LandingFooter(),
+              ),
+            ],
           ),
         ),
       ),

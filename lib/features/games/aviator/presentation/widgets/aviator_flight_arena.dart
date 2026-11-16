@@ -50,12 +50,14 @@ class AviatorFlightArena extends StatelessWidget {
             return Stack(
               fit: StackFit.expand,
               children: [
-                // 1. Radar Ray Canvas & Glowing Path
-                CustomPaint(
-                  size: Size(width, height),
-                  painter: AviatorCanvasPainter(
-                    multiplier: multiplier,
-                    status: status,
+                // 1. Radar Ray Canvas & Glowing Path (Isolated RepaintBoundary)
+                RepaintBoundary(
+                  child: CustomPaint(
+                    size: Size(width, height),
+                    painter: AviatorCanvasPainter(
+                      multiplier: multiplier,
+                      status: status,
+                    ),
                   ),
                 ),
 

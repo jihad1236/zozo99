@@ -199,12 +199,13 @@ class LandingGamesGrid extends StatelessWidget {
     final networkImage = game['networkImage'] as String?;
     final type = game['type'] as GameType? ?? GameType.aviator;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => controller.onGameTap(type),
-        borderRadius: BorderRadius.circular(12.r),
-        child: Container(
+    return RepaintBoundary(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => controller.onGameTap(type),
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
           decoration: BoxDecoration(
             color: const Color(0xFF131722),
             borderRadius: BorderRadius.circular(12.r),
@@ -392,6 +393,7 @@ class LandingGamesGrid extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

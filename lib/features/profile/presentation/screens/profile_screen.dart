@@ -28,7 +28,10 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         title: Text(
           'My Profile',
-          style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
+          style: AppTextStyle().boldTextStyle(
+            fontSize: 18.sp,
+            color: Colors.white,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -53,47 +56,73 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 36.r,
-                        backgroundColor: user?.isAdmin == true ? AppColors.aviatorRed : AppColors.gold,
+                        backgroundColor: user?.isAdmin == true
+                            ? AppColors.aviatorRed
+                            : AppColors.gold,
                         child: Text(
                           user?.username.substring(0, 1).toUpperCase() ?? 'U',
-                          style: AppTextStyle().boldTextStyle(fontSize: 28.sp, color: Colors.white),
+                          style: AppTextStyle().boldTextStyle(
+                            fontSize: 28.sp,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       SizedBox(height: 12.h),
                       Text(
                         user?.username ?? 'Gamer',
-                        style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 18.sp,
+                          color: Colors.white,
+                        ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         user?.email ?? '',
-                        style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: AppColors.darkTextSecondary),
+                        style: AppTextStyle().regularTextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors.darkTextSecondary,
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.h,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.gold.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(20.r),
-                              border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                              border: Border.all(
+                                color: AppColors.gold.withValues(alpha: 0.3),
+                              ),
                             ),
                             child: Row(
                               children: [
-                                Icon(Iconsax.crown, color: AppColors.gold, size: 14.sp),
+                                Icon(
+                                  Iconsax.crown,
+                                  color: AppColors.gold,
+                                  size: 14.sp,
+                                ),
                                 SizedBox(width: 4.w),
                                 Text(
                                   '${user?.tier.label.toUpperCase()} VIP',
-                                  style: AppTextStyle().boldTextStyle(fontSize: 10.sp, color: AppColors.gold),
+                                  style: AppTextStyle().boldTextStyle(
+                                    fontSize: 10.sp,
+                                    color: AppColors.gold,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(width: 8.w),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.h,
+                            ),
                             decoration: BoxDecoration(
                               color: user?.isAdmin == true
                                   ? AppColors.aviatorRed.withValues(alpha: 0.15)
@@ -101,7 +130,9 @@ class ProfileScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20.r),
                               border: Border.all(
                                 color: user?.isAdmin == true
-                                    ? AppColors.aviatorRed.withValues(alpha: 0.3)
+                                    ? AppColors.aviatorRed.withValues(
+                                        alpha: 0.3,
+                                      )
                                     : AppColors.neonCyan.withValues(alpha: 0.3),
                               ),
                             ),
@@ -109,7 +140,9 @@ class ProfileScreen extends StatelessWidget {
                               user?.role.name.toUpperCase() ?? 'CUSTOMER',
                               style: AppTextStyle().boldTextStyle(
                                 fontSize: 10.sp,
-                                color: user?.isAdmin == true ? AppColors.aviatorRed : AppColors.neonCyan,
+                                color: user?.isAdmin == true
+                                    ? AppColors.aviatorRed
+                                    : AppColors.neonCyan,
                               ),
                             ),
                           ),
@@ -119,58 +152,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 );
               },
-            ),
-            SizedBox(height: 16.h),
-
-            // Demo Account Quick Switcher
-            Container(
-              padding: EdgeInsets.all(14.r),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1B202E),
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Iconsax.refresh_2, color: AppColors.neonCyan, size: 18.sp),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'DEMO ROLE QUICK SWITCH',
-                        style: AppTextStyle().boldTextStyle(fontSize: 11.sp, color: AppColors.neonCyan, letterSpacing: 1.0),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => authController.switchDemoAccount(UserRole.customer),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.neonCyan),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: Text('Customer Mode', style: AppTextStyle().boldTextStyle(fontSize: 11.sp, color: Colors.white)),
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => authController.switchDemoAccount(UserRole.admin),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.aviatorRed,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: Text('Admin Mode', style: AppTextStyle().boldTextStyle(fontSize: 11.sp, color: Colors.white)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ),
             SizedBox(height: 16.h),
 
@@ -196,7 +177,8 @@ class ProfileScreen extends StatelessWidget {
                             icon: Iconsax.security_user,
                             title: 'Admin Management Panel',
                             color: AppColors.aviatorRed,
-                            onTap: () => Get.to(() => const AdminDashboardScreen()),
+                            onTap: () =>
+                                Get.to(() => const AdminDashboardScreen()),
                           ),
                           const Divider(height: 1, color: AppColors.darkBorder),
                         ],
@@ -245,16 +227,25 @@ class ProfileScreen extends StatelessWidget {
                 onPressed: authController.logout,
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: AppColors.error),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Iconsax.logout, color: AppColors.error, size: 20),
+                    const Icon(
+                      Iconsax.logout,
+                      color: AppColors.error,
+                      size: 20,
+                    ),
                     SizedBox(width: 8.w),
                     Text(
                       'Log Out',
-                      style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: AppColors.error),
+                      style: AppTextStyle().boldTextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.error,
+                      ),
                     ),
                   ],
                 ),
@@ -291,10 +282,17 @@ class ProfileScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: AppTextStyle().mediumTextStyle(fontSize: 13.sp, color: Colors.white),
+                style: AppTextStyle().mediumTextStyle(
+                  fontSize: 13.sp,
+                  color: Colors.white,
+                ),
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, color: AppColors.darkTextDisabled, size: 14),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: AppColors.darkTextDisabled,
+              size: 14,
+            ),
           ],
         ),
       ),
@@ -308,20 +306,34 @@ class ProfileScreen extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         backgroundColor: AppColors.darkSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-        title: Text('Edit Profile', style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Edit Profile',
+          style: AppTextStyle().boldTextStyle(
+            fontSize: 16.sp,
+            color: Colors.white,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameCtrl,
               style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(labelText: 'Username', labelStyle: TextStyle(color: Colors.white70)),
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                labelStyle: TextStyle(color: Colors.white70),
+              ),
             ),
             TextField(
               controller: phoneCtrl,
               style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(labelText: 'Phone', labelStyle: TextStyle(color: Colors.white70)),
+              decoration: const InputDecoration(
+                labelText: 'Phone',
+                labelStyle: TextStyle(color: Colors.white70),
+              ),
             ),
           ],
         ),
@@ -329,11 +341,21 @@ class ProfileScreen extends StatelessWidget {
           TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
-              await repo.updateProfile(username: nameCtrl.text, phone: phoneCtrl.text);
+              await repo.updateProfile(
+                username: nameCtrl.text,
+                phone: phoneCtrl.text,
+              );
               Get.back();
-              Get.snackbar('Saved', 'Profile details updated.', backgroundColor: AppColors.success, colorText: Colors.white);
+              Get.snackbar(
+                'Saved',
+                'Profile details updated.',
+                backgroundColor: AppColors.success,
+                colorText: Colors.white,
+              );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.neonGreen),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.neonGreen,
+            ),
             child: const Text('Save', style: TextStyle(color: Colors.black)),
           ),
         ],

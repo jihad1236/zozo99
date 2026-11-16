@@ -3,6 +3,7 @@ import 'package:zozo99/core/repositories/betting_repository.dart';
 import 'package:zozo99/core/repositories/mock_betting_repository.dart';
 import 'package:zozo99/core/services/network/internet_service.dart';
 import 'package:zozo99/features/authentication/controllers/auth_controller.dart';
+import 'package:zozo99/features/landing/controllers/landing_controller.dart';
 import 'package:zozo99/features/splash/controllers/splash_controller.dart';
 
 class ControllerBinder extends Bindings {
@@ -12,5 +13,6 @@ class ControllerBinder extends Bindings {
     Get.put<BettingRepository>(MockBettingRepository(), permanent: true);
     Get.put<AuthController>(AuthController(), permanent: true);
     Get.put<SplashController>(SplashController(), permanent: true);
+    Get.lazyPut<LandingController>(() => LandingController(), fenix: true);
   }
 }
