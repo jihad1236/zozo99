@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:zozo99/core/common/styles/global_text_style.dart';
 import 'package:zozo99/core/models/betting_models.dart';
 import 'package:zozo99/core/utils/constants/colors.dart';
+import 'package:zozo99/core/utils/constants/icon_path.dart';
 import 'package:zozo99/core/utils/constants/sizer.dart';
 import 'package:zozo99/features/landing/controllers/landing_controller.dart';
 import 'package:zozo99/features/wallet/presentation/screens/deposit_screen.dart';
@@ -28,24 +29,32 @@ class LandingHeader extends StatelessWidget {
             // Brand Logo
             Row(
               children: [
-                Container(
-                  padding: EdgeInsets.all(6.r),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.aviatorRed, AppColors.gold],
-                    ),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Icon(Icons.sports_esports_rounded, color: Colors.white, size: 18.sp),
+                SizedBox(
+                  width: 32.w,
+                  height: 32.w,
+                  child: Image.asset(IconPath.appLogo, fit: BoxFit.contain),
                 ),
                 SizedBox(width: 8.w),
-                Text(
-                  'zozo99',
-                  style: AppTextStyle().boldTextStyle(
-                    fontSize: 20.sp,
-                    color: Colors.white,
-                    letterSpacing: 1.0,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'zozo',
+                      style: AppTextStyle().boldTextStyle(
+                        fontSize: 20.sp,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    Text(
+                      '99',
+                      style: AppTextStyle().boldTextStyle(
+                        fontSize: 20.sp,
+                        color: const Color(0xFFFF3B30),
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

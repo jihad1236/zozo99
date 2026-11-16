@@ -1,6 +1,11 @@
 class IconPath {
   IconPath._();
 
+  // App Identity & Splash
+  static const String appLogo = 'assets/icons/app_logo.png';
+  static const String splashBg = 'assets/icons/splash_BG.png';
+
+  // Game & Navigation Icons
   static const String aviator = 'assets/icons/delivery.png';
   static const String fortuneWheel = 'assets/icons/fortune-wheel.png';
   static const String puzzle = 'assets/icons/puzzle.png';

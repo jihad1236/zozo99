@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:zozo99/core/common/styles/global_text_style.dart';
 import 'package:zozo99/core/utils/constants/colors.dart';
+import 'package:zozo99/core/utils/constants/icon_path.dart';
 import 'package:zozo99/core/utils/constants/sizer.dart';
 import 'package:zozo99/features/authentication/controllers/auth_controller.dart';
 
@@ -95,23 +96,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(16.r),
+          width: 76.w,
+          height: 76.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppColors.aviatorRed, AppColors.gold],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.aviatorRed.withValues(alpha: 0.4),
+                color: AppColors.gold.withValues(alpha: 0.35),
                 blurRadius: 24,
-                offset: const Offset(0, 8),
+                spreadRadius: 2,
               ),
             ],
           ),
-          child: Icon(Icons.sports_esports_rounded, size: 36.sp, color: Colors.white),
+          child: Image.asset(IconPath.appLogo, fit: BoxFit.contain),
         ),
         SizedBox(height: 12.h),
         Text(

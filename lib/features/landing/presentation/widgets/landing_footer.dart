@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zozo99/core/utils/constants/colors.dart';
+import 'package:zozo99/core/utils/constants/icon_path.dart';
 import 'package:zozo99/core/utils/constants/sizer.dart';
 import 'package:zozo99/features/points/presentation/screens/points_screen.dart';
 
@@ -107,6 +108,12 @@ class LandingFooter extends StatelessWidget {
           SizedBox(height: 16.h),
           Row(
             children: [
+              SizedBox(
+                width: 20.w,
+                height: 20.w,
+                child: Image.asset(IconPath.appLogo, fit: BoxFit.contain),
+              ),
+              SizedBox(width: 6.w),
               Text(
                 'zozo',
                 style: TextStyle(
