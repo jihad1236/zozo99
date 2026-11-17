@@ -1,0 +1,35 @@
+# Dart & Flutter tools and caches
+.dart_tool
+.flutter-plugins-dependencies
+.pub-cache
+.pub
+.metadata
+
+# Non-web platforms
+android
+ios
+linux
+macos
+windows
+
+# Source code and raw assets (already compiled into build/web)
+lib
+assets
+web
+test
+
+# Documentation and IDE files
+*.md
+.idea
+*.iml
+devtools_options.yaml
+analysis_options.yaml
+
+# Build artifacts (ignore everything in build EXCEPT build/web)
+build/*
+!build/web
+!build/web/**
+
+# Ignore Vercel internal output/cache
+.vercel
+**/.vercel
