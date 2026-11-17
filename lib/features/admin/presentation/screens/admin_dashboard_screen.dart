@@ -16,11 +16,14 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final AdminController controller = Get.put(AdminController());
+  late final AdminController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<AdminController>()
+        ? Get.find<AdminController>()
+        : Get.put(AdminController());
     _tabController = TabController(length: 4, vsync: this);
   }
 
@@ -58,11 +61,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           ],
         ),
       ),
-      body: Column(
-        children: [
-          // KPI Metric Cards
-          _buildKpiMetrics(controller),
-          SizedBox(height: 12.h),
+      body: ResponsiveLayout(
+        child: Column(
+          children: [
+            // KPI Metric Cards wrapped in RepaintBoundary
+            RepaintBoundary(child: _buildKpiMetrics(controller)),
+            SizedBox(height: 12.h),
 
           // Admin Tabs
           Container(
@@ -106,7 +110,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildKpiMetrics(AdminController controller) {

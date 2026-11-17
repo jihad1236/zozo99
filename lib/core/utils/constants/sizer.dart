@@ -21,8 +21,26 @@ class AppSizer {
   static bool get isPortrait => orientation == Orientation.portrait;
   static bool get isLandscape => orientation == Orientation.landscape;
 
-  static double get widthRatio => width / designWidth;
-  static double get heightRatio => height / designHeight;
+  /// Clamped effective dimensions so UI elements, fonts and icons do not
+  /// explode on wide desktop, tablet, or web browser viewports.
+  static double get effectiveWidth {
+    final w = Device.width;
+    if (w > 600) {
+      return 480.0;
+    }
+    return w;
+  }
+
+  static double get effectiveHeight {
+    final h = Device.height;
+    if (h > 900) {
+      return 800.0;
+    }
+    return h;
+  }
+
+  static double get widthRatio => effectiveWidth / designWidth;
+  static double get heightRatio => effectiveHeight / designHeight;
   static double get minRatio =>
       widthRatio < heightRatio ? widthRatio : heightRatio;
 

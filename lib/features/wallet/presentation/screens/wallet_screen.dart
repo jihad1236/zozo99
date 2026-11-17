@@ -14,7 +14,9 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(WalletController());
+    final controller = Get.isRegistered<WalletController>()
+        ? Get.find<WalletController>()
+        : Get.put(WalletController());
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -36,46 +38,48 @@ class WalletScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Dual Balance Card
-            _buildBalanceHeroCard(context, controller),
-            SizedBox(height: 16.h),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Dual Balance Card wrapped in RepaintBoundary
+              RepaintBoundary(child: _buildBalanceHeroCard(context, controller)),
+              SizedBox(height: 16.h),
 
-            // Quick Actions Bar
-            _buildQuickActions(context, controller),
-            SizedBox(height: 20.h),
+              // Quick Actions Bar
+              _buildQuickActions(context, controller),
+              SizedBox(height: 20.h),
 
-            // Conversion Widget
-            _buildConversionBanner(context, controller),
-            SizedBox(height: 24.h),
+              // Conversion Widget
+              _buildConversionBanner(context, controller),
+              SizedBox(height: 24.h),
 
-            // Transaction History Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Transaction Ledger',
-                  style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
-                ),
-                Text(
-                  'Server Audited',
-                  style: AppTextStyle().mediumTextStyle(fontSize: 11.sp, color: AppColors.neonGreen),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
+              // Transaction History Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Transaction Ledger',
+                    style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
+                  ),
+                  Text(
+                    'Server Audited',
+                    style: AppTextStyle().mediumTextStyle(fontSize: 11.sp, color: AppColors.neonGreen),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
 
-            // Filter Chips
-            _buildFilterChips(controller),
-            SizedBox(height: 12.h),
+              // Filter Chips
+              _buildFilterChips(controller),
+              SizedBox(height: 12.h),
 
-            // Transactions List
-            _buildTransactionsList(controller),
-          ],
+              // Transactions List
+              _buildTransactionsList(controller),
+            ],
+          ),
         ),
       ),
     );
@@ -379,98 +383,100 @@ class WalletScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final tx = items[index];
           final isCredit = tx.type == TransactionType.gameWin || tx.type == TransactionType.deposit;
-          return Container(
-            padding: EdgeInsets.all(14.r),
-            decoration: BoxDecoration(
-              color: AppColors.darkSurface,
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: AppColors.darkBorder),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: _getTransactionColor(tx.type).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10.r),
+          return RepaintBoundary(
+            child: Container(
+              padding: EdgeInsets.all(14.r),
+              decoration: BoxDecoration(
+                color: AppColors.darkSurface,
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: AppColors.darkBorder),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10.r),
+                    decoration: BoxDecoration(
+                      color: _getTransactionColor(tx.type).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Icon(
+                      _getTransactionIcon(tx.type),
+                      color: _getTransactionColor(tx.type),
+                      size: 20.sp,
+                    ),
                   ),
-                  child: Icon(
-                    _getTransactionIcon(tx.type),
-                    color: _getTransactionColor(tx.type),
-                    size: 20.sp,
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tx.description.isNotEmpty ? tx.description : tx.type.code,
+                          style: AppTextStyle().boldTextStyle(fontSize: 13.sp, color: Colors.white),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                tx.referenceId,
+                                style: AppTextStyle().regularTextStyle(
+                                  fontSize: 10.sp,
+                                  color: AppColors.darkTextDisabled,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                              decoration: BoxDecoration(
+                                color: tx.status == TransactionStatus.completed
+                                    ? AppColors.neonGreen.withValues(alpha: 0.15)
+                                    : AppColors.warning.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                              child: Text(
+                                tx.status.code,
+                                style: AppTextStyle().boldTextStyle(
+                                  fontSize: 8.sp,
+                                  color: tx.status == TransactionStatus.completed
+                                      ? AppColors.neonGreen
+                                      : AppColors.warning,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(width: 8.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        tx.description.isNotEmpty ? tx.description : tx.type.code,
-                        style: AppTextStyle().boldTextStyle(fontSize: 13.sp, color: Colors.white),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        '${isCredit ? "+" : "-"}${tx.currency == "CREDITS" ? "${tx.amount.toInt()} ⚡" : "\$${tx.amount.toStringAsFixed(2)}"}',
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 14.sp,
+                          color: isCredit ? AppColors.neonGreen : Colors.white,
+                        ),
                       ),
                       SizedBox(height: 4.h),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              tx.referenceId,
-                              style: AppTextStyle().regularTextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.darkTextDisabled,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          SizedBox(width: 6.w),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                            decoration: BoxDecoration(
-                              color: tx.status == TransactionStatus.completed
-                                  ? AppColors.neonGreen.withValues(alpha: 0.15)
-                                  : AppColors.warning.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: Text(
-                              tx.status.code,
-                              style: AppTextStyle().boldTextStyle(
-                                fontSize: 8.sp,
-                                color: tx.status == TransactionStatus.completed
-                                    ? AppColors.neonGreen
-                                    : AppColors.warning,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        '${tx.createdAt.hour.toString().padLeft(2, '0')}:${tx.createdAt.minute.toString().padLeft(2, '0')}',
+                        style: AppTextStyle().regularTextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.darkTextSecondary,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${isCredit ? "+" : "-"}${tx.currency == "CREDITS" ? "${tx.amount.toInt()} ⚡" : "\$${tx.amount.toStringAsFixed(2)}"}',
-                      style: AppTextStyle().boldTextStyle(
-                        fontSize: 14.sp,
-                        color: isCredit ? AppColors.neonGreen : Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      '${tx.createdAt.hour.toString().padLeft(2, '0')}:${tx.createdAt.minute.toString().padLeft(2, '0')}',
-                      style: AppTextStyle().regularTextStyle(
-                        fontSize: 10.sp,
-                        color: AppColors.darkTextSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

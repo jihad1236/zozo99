@@ -32,152 +32,155 @@ class DepositScreen extends StatelessWidget {
           style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Sandbox Info Notice
-            Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: AppColors.info.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Iconsax.info_circle, color: AppColors.info, size: 20.sp),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Text(
-                      'Demo Sandbox Payment Provider: Simulates verified webhook and instant credit conversion.',
-                      style: AppTextStyle().regularTextStyle(fontSize: 11.sp, color: Colors.white70),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
-            // Amount Input Card
-            Text(
-              'Select or Enter Amount (\$)',
-              style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
-            ),
-            SizedBox(height: 10.h),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.darkSurface,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.darkBorder),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: Row(
-                children: [
-                  Text(
-                    '\$',
-                    style: AppTextStyle().boldTextStyle(fontSize: 26.sp, color: AppColors.neonGreen),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: TextField(
-                      controller: controller.depositAmountController,
-                      keyboardType: TextInputType.number,
-                      style: AppTextStyle().boldTextStyle(fontSize: 24.sp, color: Colors.white),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '0.00',
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Sandbox Info Notice
+              Container(
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: AppColors.info.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Iconsax.info_circle, color: AppColors.info, size: 20.sp),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        'Demo Sandbox Payment Provider: Simulates verified webhook and instant credit conversion.',
+                        style: AppTextStyle().regularTextStyle(fontSize: 11.sp, color: Colors.white70),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 14.h),
+              SizedBox(height: 20.h),
 
-            // Preset Chips
-            Wrap(
-              spacing: 8.w,
-              runSpacing: 8.h,
-              children: presets.map((amount) {
-                return InkWell(
-                  onTap: () {
-                    controller.depositAmountController.text = amount.toString();
-                  },
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.darkSurfaceVariant,
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: AppColors.darkBorder),
+              // Amount Input Card
+              Text(
+                'Select or Enter Amount (\$)',
+                style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+              ),
+              SizedBox(height: 10.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.darkSurface,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.darkBorder),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                child: Row(
+                  children: [
+                    Text(
+                      '\$',
+                      style: AppTextStyle().boldTextStyle(fontSize: 26.sp, color: AppColors.neonGreen),
                     ),
-                    child: Text(
-                      '+\$$amount',
-                      style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: AppColors.gold),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: TextField(
+                        controller: controller.depositAmountController,
+                        keyboardType: TextInputType.number,
+                        style: AppTextStyle().boldTextStyle(fontSize: 24.sp, color: Colors.white),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '0.00',
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
+              SizedBox(height: 14.h),
 
-            // Payment Method Selector
-            Text(
-              'Select Payment Method',
-              style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
-            ),
-            SizedBox(height: 10.h),
-            Column(
-              children: methods.map((m) {
-                return Obx(() {
-                  final isSelected = controller.selectedPaymentMethod.value == m['name'];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 10.h),
-                    child: InkWell(
-                      onTap: () => controller.selectedPaymentMethod.value = m['name'] as String,
-                      borderRadius: BorderRadius.circular(14.r),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? (m['color'] as Color).withValues(alpha: 0.15)
-                              : AppColors.darkSurface,
-                          borderRadius: BorderRadius.circular(14.r),
-                          border: Border.all(
-                            color: isSelected
-                                ? (m['color'] as Color)
-                                : AppColors.darkBorder,
-                            width: isSelected ? 1.5 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(m['icon'] as IconData, color: m['color'] as Color, size: 24.sp),
-                            SizedBox(width: 14.w),
-                            Expanded(
-                              child: Text(
-                                m['name'] as String,
-                                style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
-                              ),
-                            ),
-                            Icon(
-                              isSelected ? Icons.check_circle_rounded : Icons.radio_button_off_rounded,
-                              color: isSelected ? (m['color'] as Color) : AppColors.darkTextDisabled,
-                              size: 20.sp,
-                            ),
-                          ],
-                        ),
+              // Preset Chips
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: presets.map((amount) {
+                  return InkWell(
+                    onTap: () {
+                      controller.depositAmountController.text = amount.toString();
+                    },
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.darkSurfaceVariant,
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(color: AppColors.darkBorder),
+                      ),
+                      child: Text(
+                        '+\$$amount',
+                        style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: AppColors.gold),
                       ),
                     ),
                   );
-                });
-              }).toList(),
-            ),
-            SizedBox(height: 12.h),
+                }).toList(),
+              ),
+              SizedBox(height: 24.h),
 
-            // Account number / reference field
+              // Payment Method Selector
+              Text(
+                'Select Payment Method',
+                style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+              ),
+              SizedBox(height: 10.h),
+              RepaintBoundary(
+                child: Column(
+                  children: methods.map((m) {
+                    return Obx(() {
+                      final isSelected = controller.selectedPaymentMethod.value == m['name'];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: InkWell(
+                          onTap: () => controller.selectedPaymentMethod.value = m['name'] as String,
+                          borderRadius: BorderRadius.circular(14.r),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? (m['color'] as Color).withValues(alpha: 0.15)
+                                  : AppColors.darkSurface,
+                              borderRadius: BorderRadius.circular(14.r),
+                              border: Border.all(
+                                color: isSelected
+                                    ? (m['color'] as Color)
+                                    : AppColors.darkBorder,
+                                width: isSelected ? 1.5 : 1,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(m['icon'] as IconData, color: m['color'] as Color, size: 24.sp),
+                                SizedBox(width: 14.w),
+                                Expanded(
+                                  child: Text(
+                                    m['name'] as String,
+                                    style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+                                  ),
+                                ),
+                                Icon(
+                                  isSelected ? Icons.check_circle_rounded : Icons.radio_button_off_rounded,
+                                  color: isSelected ? (m['color'] as Color) : AppColors.darkTextDisabled,
+                                  size: 20.sp,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: 12.h),
+
+              // Account number / reference field
             Container(
               decoration: BoxDecoration(
                 color: AppColors.darkSurface,
@@ -229,6 +232,7 @@ class DepositScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }

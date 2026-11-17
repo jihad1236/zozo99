@@ -14,7 +14,9 @@ class SpinScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SpinController());
+    final controller = Get.isRegistered<SpinController>()
+        ? Get.find<SpinController>()
+        : Get.put(SpinController());
     final repository = Get.find<BettingRepository>();
 
     return Scaffold(
@@ -62,91 +64,94 @@ class SpinScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 16.h),
-            Text(
-              'SPIN & WIN JACKPOT',
-              style: AppTextStyle().boldTextStyle(
-                fontSize: 18.sp,
-                color: AppColors.gold,
-                letterSpacing: 2.0,
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 16.h),
+              Text(
+                'SPIN & WIN JACKPOT',
+                style: AppTextStyle().boldTextStyle(
+                  fontSize: 18.sp,
+                  color: AppColors.gold,
+                  letterSpacing: 2.0,
+                ),
               ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              'Win free credits, multipliers and VIP points!',
-              style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: AppColors.darkTextSecondary),
-            ),
-            SizedBox(height: 24.h),
+              SizedBox(height: 4.h),
+              Text(
+                'Win free credits, multipliers and VIP points!',
+                style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: AppColors.darkTextSecondary),
+              ),
+              SizedBox(height: 24.h),
 
-            // Rotating Wheel Stack with Pointer
-            Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Outer Glow Ring
-                  Container(
-                    width: 300.w,
-                    height: 300.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gold.withValues(alpha: 0.25),
-                          blurRadius: 32,
-                          spreadRadius: 2,
+              // Rotating Wheel Stack with Pointer wrapped in RepaintBoundary
+              Center(
+                child: RepaintBoundary(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Outer Glow Ring
+                      Container(
+                        width: 300.w,
+                        height: 300.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.gold.withValues(alpha: 0.25),
+                              blurRadius: 32,
+                              spreadRadius: 2,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-
-                  // Animated Rotating Canvas
-                  Obx(
-                    () => Transform.rotate(
-                      angle: controller.currentRotation.value,
-                      child: CustomPaint(
-                        size: Size(280.w, 280.w),
-                        painter: _WheelPainter(segments: controller.segments),
                       ),
-                    ),
-                  ),
 
-                  // Center Spin Button / Cap
-                  Container(
-                    width: 60.w,
-                    height: 60.w,
-                    padding: EdgeInsets.all(10.r),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF2C344A), Color(0xFF141724)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                      // Animated Rotating Canvas
+                      Obx(
+                        () => Transform.rotate(
+                          angle: controller.currentRotation.value,
+                          child: CustomPaint(
+                            size: Size(280.w, 280.w),
+                            painter: _WheelPainter(segments: controller.segments),
+                          ),
+                        ),
                       ),
-                      border: Border.all(color: AppColors.gold, width: 2.5),
-                    ),
-                    child: Center(
-                      child: Image.asset(IconPath.fortuneWheel, fit: BoxFit.contain),
-                    ),
-                  ),
 
-                  // Top Indicator Arrow
-                  Positioned(
-                    top: 0,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                      size: 44.sp,
-                      shadows: const [
-                        Shadow(color: Colors.black, blurRadius: 8),
-                      ],
-                    ),
+                      // Center Spin Button / Cap
+                      Container(
+                        width: 60.w,
+                        height: 60.w,
+                        padding: EdgeInsets.all(10.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF2C344A), Color(0xFF141724)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          border: Border.all(color: AppColors.gold, width: 2.5),
+                        ),
+                        child: Center(
+                          child: Image.asset(IconPath.fortuneWheel, fit: BoxFit.contain),
+                        ),
+                      ),
+
+                      // Top Indicator Arrow
+                      Positioned(
+                        top: 0,
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.white,
+                          size: 44.sp,
+                          shadows: const [
+                            Shadow(color: Colors.black, blurRadius: 8),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
             SizedBox(height: 32.h),
 
             // Stake & Spin Action
@@ -231,7 +236,8 @@ class SpinScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 

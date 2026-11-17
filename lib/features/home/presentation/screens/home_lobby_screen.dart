@@ -37,7 +37,10 @@ class HomeLobbyScreen extends StatelessWidget {
                   backgroundColor: AppColors.aviatorRed,
                   child: Text(
                     user?.username.substring(0, 1).toUpperCase() ?? 'U',
-                    style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+                    style: AppTextStyle().boldTextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -48,20 +51,29 @@ class HomeLobbyScreen extends StatelessWidget {
                       width: 90.w,
                       child: Text(
                         user?.username ?? 'Gamer',
-                        style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 1.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.gold.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
                         '${user?.tier.label.toUpperCase() ?? "SILVER"} VIP',
-                        style: AppTextStyle().boldTextStyle(fontSize: 9.sp, color: AppColors.gold),
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 9.sp,
+                          color: AppColors.gold,
+                        ),
                       ),
                     ),
                   ],
@@ -83,15 +95,24 @@ class HomeLobbyScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.darkSurface,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.gold.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.bolt_rounded, color: AppColors.gold, size: 16.sp),
+                    Icon(
+                      Icons.bolt_rounded,
+                      color: AppColors.gold,
+                      size: 16.sp,
+                    ),
                     SizedBox(width: 4.w),
                     Text(
                       '${credits.toInt()}',
-                      style: AppTextStyle().boldTextStyle(fontSize: 13.sp, color: Colors.white),
+                      style: AppTextStyle().boldTextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.white,
+                      ),
                     ),
                     SizedBox(width: 6.w),
                     InkWell(
@@ -102,7 +123,11 @@ class HomeLobbyScreen extends StatelessWidget {
                           color: AppColors.neonGreen,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.add, color: Colors.black, size: 12),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -117,98 +142,109 @@ class HomeLobbyScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Live Winning Marquee Ticker
-            _buildLiveWinningTicker(),
-            SizedBox(height: 14.h),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Live Winning Marquee Ticker
+              RepaintBoundary(child: _buildLiveWinningTicker()),
+              SizedBox(height: 14.h),
 
-            // Hero Promo Banner
-            _buildHeroBanner(context),
-            SizedBox(height: 20.h),
+              // Hero Promo Banner
+              RepaintBoundary(child: _buildHeroBanner(context)),
+              SizedBox(height: 20.h),
 
-            // Section: Featured Games
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'HOT & FEATURED GAMES',
-                  style: AppTextStyle().boldTextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.white,
-                    letterSpacing: 1.0,
+              // Section: Featured Games
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'HOT & FEATURED GAMES',
+                    style: AppTextStyle().boldTextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.white,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 8.w,
-                      height: 8.w,
-                      decoration: const BoxDecoration(
-                        color: AppColors.neonGreen,
-                        shape: BoxShape.circle,
+                  Row(
+                    children: [
+                      Container(
+                        width: 8.w,
+                        height: 8.w,
+                        decoration: const BoxDecoration(
+                          color: AppColors.neonGreen,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '1,420 Online',
-                      style: AppTextStyle().mediumTextStyle(fontSize: 11.sp, color: AppColors.neonGreen),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
-
-            // Game Cards
-            _buildGameCard(
-              title: 'Aviator Crash',
-              badge: 'TRENDING 🚀',
-              description: 'Real-time curve flight with multipliers up to 100X. Cash out in time!',
-              accentColor: AppColors.aviatorRed,
-              icon: Icons.flight_takeoff_rounded,
-              imageAsset: IconPath.aviator,
-              onPlay: () => Get.to(() => const AviatorScreen()),
-            ),
-            SizedBox(height: 12.h),
-
-            _buildGameCard(
-              title: 'Lucky Fortune Wheel',
-              badge: 'DAILY SPIN 🎡',
-              description: 'Spin for instant free credits, jackpot multipliers & VIP points!',
-              accentColor: AppColors.gold,
-              icon: Icons.album_rounded,
-              imageAsset: IconPath.fortuneWheel,
-              onPlay: () => Get.to(() => const SpinScreen()),
-            ),
-            SizedBox(height: 12.h),
-
-            _buildGameCard(
-              title: 'Cyber Match Rush',
-              badge: 'PUZZLE 🧩',
-              description: 'Match cyber crystals against the moves clock to win 3X rewards!',
-              accentColor: AppColors.neonCyan,
-              icon: Icons.extension_rounded,
-              imageAsset: IconPath.puzzle,
-              onPlay: () => Get.to(() => const PuzzleScreen()),
-            ),
-            SizedBox(height: 24.h),
-
-            // Live Activity Feed
-            Text(
-              'LIVE CASINO ACTIVITY',
-              style: AppTextStyle().boldTextStyle(
-                fontSize: 13.sp,
-                color: AppColors.darkTextSecondary,
-                letterSpacing: 1.0,
+                      SizedBox(width: 4.w),
+                      Text(
+                        '1,420 Online',
+                        style: AppTextStyle().mediumTextStyle(
+                          fontSize: 11.sp,
+                          color: AppColors.neonGreen,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 10.h),
-            _buildLiveActivityList(),
-          ],
+              SizedBox(height: 12.h),
+
+              // Game Cards
+              RepaintBoundary(
+                child: _buildGameCard(
+                  title: 'Aviator Crash',
+                  badge: 'TRENDING 🚀',
+                  description: 'Real-time curve flight with multipliers up to 100X. Cash out in time!',
+                  accentColor: AppColors.aviatorRed,
+                  icon: Icons.flight_takeoff_rounded,
+                  imageAsset: IconPath.aviator,
+                  onPlay: () => Get.to(() => const AviatorScreen()),
+                ),
+              ),
+              SizedBox(height: 12.h),
+
+              RepaintBoundary(
+                child: _buildGameCard(
+                  title: 'Lucky Fortune Wheel',
+                  badge: 'DAILY SPIN 🎡',
+                  description: 'Spin for instant free credits, jackpot multipliers & VIP points!',
+                  accentColor: AppColors.gold,
+                  icon: Icons.album_rounded,
+                  imageAsset: IconPath.fortuneWheel,
+                  onPlay: () => Get.to(() => const SpinScreen()),
+                ),
+              ),
+              SizedBox(height: 12.h),
+
+              RepaintBoundary(
+                child: _buildGameCard(
+                  title: 'Cyber Match Rush',
+                  badge: 'PUZZLE 🧩',
+                  description: 'Match cyber crystals against the moves clock to win 3X rewards!',
+                  accentColor: AppColors.neonCyan,
+                  icon: Icons.extension_rounded,
+                  imageAsset: IconPath.puzzle,
+                  onPlay: () => Get.to(() => const PuzzleScreen()),
+                ),
+              ),
+              SizedBox(height: 24.h),
+
+              // Live Activity Feed
+              Text(
+                'LIVE CASINO ACTIVITY',
+                style: AppTextStyle().boldTextStyle(
+                  fontSize: 13.sp,
+                  color: AppColors.darkTextSecondary,
+                  letterSpacing: 1.0,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              RepaintBoundary(child: _buildLiveActivityList()),
+            ],
+          ),
         ),
       ),
     );
@@ -232,14 +268,20 @@ class HomeLobbyScreen extends StatelessWidget {
             ),
             child: Text(
               'LIVE',
-              style: AppTextStyle().boldTextStyle(fontSize: 9.sp, color: AppColors.gold),
+              style: AppTextStyle().boldTextStyle(
+                fontSize: 9.sp,
+                color: AppColors.gold,
+              ),
             ),
           ),
           SizedBox(width: 8.w),
           Expanded(
             child: Text(
               'NeoMatrix cashed out 480 ⚡ on Aviator (3.2x) • Sophia won 100 ⚡ on Lucky Spin!',
-              style: AppTextStyle().mediumTextStyle(fontSize: 11.sp, color: Colors.white70),
+              style: AppTextStyle().mediumTextStyle(
+                fontSize: 11.sp,
+                color: Colors.white70,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -278,25 +320,36 @@ class HomeLobbyScreen extends StatelessWidget {
             ),
             child: Text(
               'FEATURED CRASH GAME',
-              style: AppTextStyle().boldTextStyle(fontSize: 10.sp, color: Colors.white),
+              style: AppTextStyle().boldTextStyle(
+                fontSize: 10.sp,
+                color: Colors.white,
+              ),
             ),
           ),
           SizedBox(height: 12.h),
           Text(
             'AVIATOR 100X MULTIPLIER',
-            style: AppTextStyle().boldTextStyle(fontSize: 22.sp, color: Colors.white),
+            style: AppTextStyle().boldTextStyle(
+              fontSize: 22.sp,
+              color: Colors.white,
+            ),
           ),
           SizedBox(height: 4.h),
           Text(
             'Watch the curve fly and cash out before the crash!',
-            style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: Colors.white.withValues(alpha: 0.85)),
+            style: AppTextStyle().regularTextStyle(
+              fontSize: 12.sp,
+              color: Colors.white.withValues(alpha: 0.85),
+            ),
           ),
           SizedBox(height: 16.h),
           ElevatedButton(
             onPressed: () => Get.to(() => const AviatorScreen()),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
             ),
             child: Row(
@@ -304,7 +357,10 @@ class HomeLobbyScreen extends StatelessWidget {
               children: [
                 Text(
                   'PLAY NOW 🚀',
-                  style: AppTextStyle().boldTextStyle(fontSize: 13.sp, color: AppColors.aviatorRed),
+                  style: AppTextStyle().boldTextStyle(
+                    fontSize: 13.sp,
+                    color: AppColors.aviatorRed,
+                  ),
                 ),
               ],
             ),
@@ -355,21 +411,30 @@ class HomeLobbyScreen extends StatelessWidget {
                     Flexible(
                       child: Text(
                         title,
-                        style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     SizedBox(width: 6.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: accentColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
                         badge,
-                        style: AppTextStyle().boldTextStyle(fontSize: 8.sp, color: accentColor),
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 8.sp,
+                          color: accentColor,
+                        ),
                       ),
                     ),
                   ],
@@ -377,7 +442,10 @@ class HomeLobbyScreen extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   description,
-                  style: AppTextStyle().regularTextStyle(fontSize: 11.sp, color: AppColors.darkTextSecondary),
+                  style: AppTextStyle().regularTextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.darkTextSecondary,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -389,12 +457,17 @@ class HomeLobbyScreen extends StatelessWidget {
             onPressed: onPlay,
             style: ElevatedButton.styleFrom(
               backgroundColor: accentColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
             ),
             child: Text(
               'PLAY',
-              style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.black),
+              style: AppTextStyle().boldTextStyle(
+                fontSize: 12.sp,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -404,10 +477,30 @@ class HomeLobbyScreen extends StatelessWidget {
 
   Widget _buildLiveActivityList() {
     final activities = [
-      {'user': 'AlexRider', 'game': 'Aviator', 'win': '+320 Credits', 'color': AppColors.neonGreen},
-      {'user': 'Kavita_99', 'game': 'Lucky Spin', 'win': '+100 Credits', 'color': AppColors.gold},
-      {'user': 'NeoMatrix', 'game': 'Cyber Match', 'win': '+150 Credits', 'color': AppColors.neonCyan},
-      {'user': 'Samurai_X', 'game': 'Aviator', 'win': '+840 Credits', 'color': AppColors.neonGreen},
+      {
+        'user': 'AlexRider',
+        'game': 'Aviator',
+        'win': '+320 Credits',
+        'color': AppColors.neonGreen,
+      },
+      {
+        'user': 'Kavita_99',
+        'game': 'Lucky Spin',
+        'win': '+100 Credits',
+        'color': AppColors.gold,
+      },
+      {
+        'user': 'NeoMatrix',
+        'game': 'Cyber Match',
+        'win': '+150 Credits',
+        'color': AppColors.neonCyan,
+      },
+      {
+        'user': 'Samurai_X',
+        'game': 'Aviator',
+        'win': '+840 Credits',
+        'color': AppColors.neonGreen,
+      },
     ];
 
     return Container(
@@ -426,12 +519,19 @@ class HomeLobbyScreen extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.sports_esports_rounded, color: AppColors.darkTextSecondary, size: 16.sp),
+                      Icon(
+                        Icons.sports_esports_rounded,
+                        color: AppColors.darkTextSecondary,
+                        size: 16.sp,
+                      ),
                       SizedBox(width: 8.w),
                       Expanded(
                         child: Text(
                           '${a['user']} (${a['game']})',
-                          style: AppTextStyle().mediumTextStyle(fontSize: 12.sp, color: Colors.white),
+                          style: AppTextStyle().mediumTextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.white,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -441,7 +541,10 @@ class HomeLobbyScreen extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Text(
                   a['win'] as String,
-                  style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: a['color'] as Color),
+                  style: AppTextStyle().boldTextStyle(
+                    fontSize: 12.sp,
+                    color: a['color'] as Color,
+                  ),
                 ),
               ],
             ),

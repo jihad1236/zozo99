@@ -15,7 +15,9 @@ class AviatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AviatorController());
+    final controller = Get.isRegistered<AviatorController>()
+        ? Get.find<AviatorController>()
+        : Get.put(AviatorController());
     final repository = Get.find<BettingRepository>();
 
     return Scaffold(
@@ -103,140 +105,144 @@ class AviatorScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 1. Spribe-Style Round History
-              AviatorRoundHistory(controller: controller),
+        child: ResponsiveLayout(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 1. Spribe-Style Round History
+                RepaintBoundary(child: AviatorRoundHistory(controller: controller)),
 
-              // 2. Main Flight Arena
-              SizedBox(
-                height: 220.h,
-                child: AviatorFlightArena(controller: controller),
-              ),
-
-              // 3. Dual Bet Panels Header (Tabs on mobile, Dual side-by-side on wide screens)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (constraints.maxWidth > 500) {
-                      // Wide screen: Both panels side-by-side
-                      return Row(
-                        children: [
-                          Expanded(child: AviatorBetPanel(controller: controller, panel: 1)),
-                          SizedBox(width: 8.w),
-                          Expanded(child: AviatorBetPanel(controller: controller, panel: 2)),
-                        ],
-                      );
-                    } else {
-                      // Mobile: Dual panel switcher tab
-                      return Column(
-                        children: [
-                          Obx(() {
-                            final tab = controller.activePanelTab.value;
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 6.h),
-                              height: 30.h,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF121620),
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () => controller.setPanelTab(0),
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: tab == 0 ? const Color(0xFF252D3D) : Colors.transparent,
-                                          borderRadius: BorderRadius.circular(8.r),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'BET PANEL 1',
-                                          style: TextStyle(
-                                            color: tab == 0 ? Colors.white : Colors.white54,
-                                            fontSize: 10.5.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () => controller.setPanelTab(1),
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: tab == 1 ? const Color(0xFF252D3D) : Colors.transparent,
-                                          borderRadius: BorderRadius.circular(8.r),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'BET PANEL 2',
-                                          style: TextStyle(
-                                            color: tab == 1 ? Colors.white : Colors.white54,
-                                            fontSize: 10.5.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                          Obx(() {
-                            final tab = controller.activePanelTab.value;
-                            return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 200),
-                              child: tab == 0
-                                  ? AviatorBetPanel(key: const ValueKey('panel1'), controller: controller, panel: 1)
-                                  : AviatorBetPanel(key: const ValueKey('panel2'), controller: controller, panel: 2),
-                            );
-                          }),
-                        ],
-                      );
-                    }
-                  },
+                // 2. Main Flight Arena
+                RepaintBoundary(
+                  child: SizedBox(
+                    height: 220.h,
+                    child: AviatorFlightArena(controller: controller),
+                  ),
                 ),
-              ),
 
-              // 4. Live Players Bets Table
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                child: _buildLivePlayersTable(controller),
-              ),
+                // 3. Dual Bet Panels Header (Tabs on mobile, Dual side-by-side on wide screens)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth > 500) {
+                        // Wide screen: Both panels side-by-side
+                        return Row(
+                          children: [
+                            Expanded(child: AviatorBetPanel(controller: controller, panel: 1)),
+                            SizedBox(width: 8.w),
+                            Expanded(child: AviatorBetPanel(controller: controller, panel: 2)),
+                          ],
+                        );
+                      } else {
+                        // Mobile: Dual panel switcher tab
+                        return Column(
+                          children: [
+                            Obx(() {
+                              final tab = controller.activePanelTab.value;
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 6.h),
+                                height: 30.h,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF121620),
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () => controller.setPanelTab(0),
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: tab == 0 ? const Color(0xFF252D3D) : Colors.transparent,
+                                            borderRadius: BorderRadius.circular(8.r),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'BET PANEL 1',
+                                            style: TextStyle(
+                                              color: tab == 0 ? Colors.white : Colors.white54,
+                                              fontSize: 10.5.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () => controller.setPanelTab(1),
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: tab == 1 ? const Color(0xFF252D3D) : Colors.transparent,
+                                            borderRadius: BorderRadius.circular(8.r),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'BET PANEL 2',
+                                            style: TextStyle(
+                                              color: tab == 1 ? Colors.white : Colors.white54,
+                                              fontSize: 10.5.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                            Obx(() {
+                              final tab = controller.activePanelTab.value;
+                              return AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 200),
+                                child: tab == 0
+                                    ? AviatorBetPanel(key: const ValueKey('panel1'), controller: controller, panel: 1)
+                                    : AviatorBetPanel(key: const ValueKey('panel2'), controller: controller, panel: 2),
+                              );
+                            }),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ),
 
-              // 5. Official SPRIBE Signature
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Powered by ',
-                      style: TextStyle(color: Colors.white24, fontSize: 10.sp),
-                    ),
-                    Text(
-                      'SPRIBE',
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.2,
+                // 4. Live Players Bets Table
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  child: RepaintBoundary(child: _buildLivePlayersTable(controller)),
+                ),
+
+                // 5. Official SPRIBE Signature
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Powered by ',
+                        style: TextStyle(color: Colors.white24, fontSize: 10.sp),
                       ),
-                    ),
-                  ],
+                      Text(
+                        'SPRIBE',
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

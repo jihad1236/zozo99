@@ -30,148 +30,151 @@ class WithdrawalScreen extends StatelessWidget {
           style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Available Balance Card
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                color: AppColors.darkSurface,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.darkBorder),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Available to Withdraw',
-                        style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: AppColors.darkTextSecondary),
-                      ),
-                      SizedBox(height: 4.h),
-                      Obx(
-                        () => Text(
-                          '\$${(controller.wallet.value?.cashBalance ?? 0.0).toStringAsFixed(2)}',
-                          style: AppTextStyle().boldTextStyle(fontSize: 22.sp, color: Colors.white),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Available Balance Card
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: AppColors.darkSurface,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.darkBorder),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Available to Withdraw',
+                          style: AppTextStyle().regularTextStyle(fontSize: 12.sp, color: AppColors.darkTextSecondary),
                         ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.aviatorRed.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8.r),
+                        SizedBox(height: 4.h),
+                        Obx(
+                          () => Text(
+                            '\$${(controller.wallet.value?.cashBalance ?? 0.0).toStringAsFixed(2)}',
+                            style: AppTextStyle().boldTextStyle(fontSize: 22.sp, color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      'Min \$20.00',
-                      style: AppTextStyle().boldTextStyle(fontSize: 11.sp, color: AppColors.aviatorRed),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
-            // Amount Input
-            Text(
-              'Withdrawal Amount (\$)',
-              style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
-            ),
-            SizedBox(height: 8.h),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.darkSurface,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.darkBorder),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: Row(
-                children: [
-                  Text(
-                    '\$',
-                    style: AppTextStyle().boldTextStyle(fontSize: 24.sp, color: AppColors.aviatorRed),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: TextField(
-                      controller: controller.withdrawAmountController,
-                      keyboardType: TextInputType.number,
-                      style: AppTextStyle().boldTextStyle(fontSize: 22.sp, color: Colors.white),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '0.00',
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      final max = controller.wallet.value?.cashBalance ?? 0.0;
-                      controller.withdrawAmountController.text = max.toStringAsFixed(2);
-                    },
-                    child: Text(
-                      'MAX',
-                      style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: AppColors.gold),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
-            // Method Selector
-            Text(
-              'Select Payout Method',
-              style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
-            ),
-            SizedBox(height: 10.h),
-            Wrap(
-              spacing: 10.w,
-              runSpacing: 10.h,
-              children: methods.map((m) {
-                return Obx(() {
-                  final isSelected = controller.selectedWithdrawMethod.value == m['name'];
-                  return InkWell(
-                    onTap: () => controller.selectedWithdrawMethod.value = m['name'] as String,
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? (m['color'] as Color).withValues(alpha: 0.18)
-                            : AppColors.darkSurfaceVariant,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
-                          color: isSelected ? (m['color'] as Color) : AppColors.darkBorder,
-                          width: isSelected ? 1.5 : 1,
+                        color: AppColors.aviatorRed.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        'Min \$20.00',
+                        style: AppTextStyle().boldTextStyle(fontSize: 11.sp, color: AppColors.aviatorRed),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
+
+              // Amount Input
+              Text(
+                'Withdrawal Amount (\$)',
+                style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.darkSurface,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.darkBorder),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                child: Row(
+                  children: [
+                    Text(
+                      '\$',
+                      style: AppTextStyle().boldTextStyle(fontSize: 24.sp, color: AppColors.aviatorRed),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: TextField(
+                        controller: controller.withdrawAmountController,
+                        keyboardType: TextInputType.number,
+                        style: AppTextStyle().boldTextStyle(fontSize: 22.sp, color: Colors.white),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '0.00',
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(m['icon'] as IconData, color: m['color'] as Color, size: 18.sp),
-                          SizedBox(width: 8.w),
-                          Text(
-                            m['name'] as String,
-                            style: AppTextStyle().boldTextStyle(
-                              fontSize: 12.sp,
-                              color: isSelected ? Colors.white : AppColors.darkTextSecondary,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final max = controller.wallet.value?.cashBalance ?? 0.0;
+                        controller.withdrawAmountController.text = max.toStringAsFixed(2);
+                      },
+                      child: Text(
+                        'MAX',
+                        style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: AppColors.gold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
+
+              // Method Selector
+              Text(
+                'Select Payout Method',
+                style: AppTextStyle().boldTextStyle(fontSize: 14.sp, color: Colors.white),
+              ),
+              SizedBox(height: 10.h),
+              RepaintBoundary(
+                child: Wrap(
+                  spacing: 10.w,
+                  runSpacing: 10.h,
+                  children: methods.map((m) {
+                    return Obx(() {
+                      final isSelected = controller.selectedWithdrawMethod.value == m['name'];
+                      return InkWell(
+                        onTap: () => controller.selectedWithdrawMethod.value = m['name'] as String,
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? (m['color'] as Color).withValues(alpha: 0.18)
+                                : AppColors.darkSurfaceVariant,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: isSelected ? (m['color'] as Color) : AppColors.darkBorder,
+                              width: isSelected ? 1.5 : 1,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-              }).toList(),
-            ),
-            SizedBox(height: 20.h),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(m['icon'] as IconData, color: m['color'] as Color, size: 18.sp),
+                              SizedBox(width: 8.w),
+                              Text(
+                                m['name'] as String,
+                                style: AppTextStyle().boldTextStyle(
+                                  fontSize: 12.sp,
+                                  color: isSelected ? Colors.white : AppColors.darkTextSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: 20.h),
 
             // Account Details
             Text(
@@ -244,7 +247,8 @@ class WithdrawalScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildField({

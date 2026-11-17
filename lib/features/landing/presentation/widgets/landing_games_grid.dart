@@ -227,6 +227,8 @@ class LandingGamesGrid extends StatelessWidget {
                 Image.network(
                   networkImage,
                   fit: BoxFit.cover,
+                  cacheWidth: 300,
+                  cacheHeight: 380,
                   errorBuilder: (context, error, stackTrace) => Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

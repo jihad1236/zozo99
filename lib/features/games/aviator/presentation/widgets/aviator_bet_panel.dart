@@ -308,74 +308,81 @@ class AviatorBetPanel extends StatelessWidget {
           SizedBox(height: 8.h),
 
           // 3. Auto Controls Row (Auto Bet & Auto Cash Out)
-          Row(
-            children: [
-              // Auto Bet Toggle
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Auto Bet', style: TextStyle(color: Colors.white70, fontSize: 10.sp)),
-                  SizedBox(width: 4.w),
-                  Obx(() {
-                    final isAuto = panel == 1 ? controller.isAutoBetEnabled1.value : controller.isAutoBetEnabled2.value;
-                    return Transform.scale(
-                      scale: 0.7,
-                      child: Switch(
-                        value: isAuto,
-                        onChanged: (val) => controller.toggleAutoBet(panel, val),
-                        activeThumbColor: AppColors.emeraldGreen,
-                        activeTrackColor: AppColors.emeraldGreen.withValues(alpha: 0.3),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-              const Spacer(),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Auto Bet Toggle
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Auto Bet', style: TextStyle(color: Colors.white70, fontSize: 10.5.sp)),
+                    SizedBox(width: 4.w),
+                    Obx(() {
+                      final isAuto = panel == 1 ? controller.isAutoBetEnabled1.value : controller.isAutoBetEnabled2.value;
+                      return Transform.scale(
+                        scale: 0.75,
+                        child: Switch(
+                          value: isAuto,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) => controller.toggleAutoBet(panel, val),
+                          activeThumbColor: AppColors.emeraldGreen,
+                          activeTrackColor: AppColors.emeraldGreen.withValues(alpha: 0.3),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+                SizedBox(width: 14.w),
 
-              // Auto Cash Out Toggle + Multiplier input
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Auto Cash Out', style: TextStyle(color: Colors.white70, fontSize: 10.sp)),
-                  SizedBox(width: 4.w),
-                  Obx(() {
-                    final isAuto = panel == 1 ? controller.isAutoCashoutEnabled1.value : controller.isAutoCashoutEnabled2.value;
-                    return Transform.scale(
-                      scale: 0.7,
-                      child: Switch(
-                        value: isAuto,
-                        onChanged: (val) => controller.toggleAutoCashout(panel, val),
-                        activeThumbColor: AppColors.emeraldGreen,
-                        activeTrackColor: AppColors.emeraldGreen.withValues(alpha: 0.3),
+                // Auto Cash Out Toggle + Multiplier input
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Auto Cash Out', style: TextStyle(color: Colors.white70, fontSize: 10.5.sp)),
+                    SizedBox(width: 4.w),
+                    Obx(() {
+                      final isAuto = panel == 1 ? controller.isAutoCashoutEnabled1.value : controller.isAutoCashoutEnabled2.value;
+                      return Transform.scale(
+                        scale: 0.75,
+                        child: Switch(
+                          value: isAuto,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) => controller.toggleAutoCashout(panel, val),
+                          activeThumbColor: AppColors.emeraldGreen,
+                          activeTrackColor: AppColors.emeraldGreen.withValues(alpha: 0.3),
+                        ),
+                      );
+                    }),
+                    SizedBox(width: 6.w),
+                    Container(
+                      width: 48.w,
+                      height: 24.h,
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0C1017),
+                        borderRadius: BorderRadius.circular(6.r),
+                        border: Border.all(color: const Color(0xFF222B3D)),
                       ),
-                    );
-                  }),
-                  SizedBox(width: 4.w),
-                  Container(
-                    width: 50.w,
-                    height: 24.h,
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0C1017),
-                      borderRadius: BorderRadius.circular(6.r),
-                      border: Border.all(color: const Color(0xFF222B3D)),
-                    ),
-                    alignment: Alignment.center,
-                    child: TextField(
-                      controller: autoCashController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
+                      alignment: Alignment.center,
+                      child: TextField(
+                        controller: autoCashController,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

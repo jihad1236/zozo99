@@ -8,16 +8,20 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(BottomNavController());
+    final controller = Get.isRegistered<BottomNavController>()
+        ? Get.find<BottomNavController>()
+        : Get.put(BottomNavController());
 
-    return Obx(
-      () => Scaffold(
-        backgroundColor: AppColors.darkBackground,
-        body: IndexedStack(
+    return Scaffold(
+      backgroundColor: AppColors.darkBackground,
+      body: Obx(
+        () => IndexedStack(
           index: controller.currentIndex.value,
           children: controller.screens,
         ),
-        bottomNavigationBar: _AppBottomNavBar(controller: controller),
+      ),
+      bottomNavigationBar: RepaintBoundary(
+        child: _AppBottomNavBar(controller: controller),
       ),
     );
   }

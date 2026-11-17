@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:zozo99/core/utils/constants/icon_path.dart';
 import 'package:zozo99/core/utils/constants/sizer.dart';
 import 'package:zozo99/features/authentication/controllers/auth_controller.dart';
-import 'package:zozo99/features/authentication/presentation/widgets/auth_demo_switcher.dart';
 import 'package:zozo99/features/authentication/presentation/widgets/auth_glass_card.dart';
 import 'package:zozo99/features/authentication/presentation/widgets/auth_header.dart';
 import 'package:zozo99/features/authentication/presentation/widgets/auth_login_form.dart';
@@ -58,47 +57,46 @@ class _LoginScreenState extends State<LoginScreen>
 
           // 2. Interactive Authentication Form
           SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // App Brand & Logo Header
-                  const AuthHeader(),
-                  SizedBox(height: 16.h),
+            child: ResponsiveLayout(
+              maxWidth: 480,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // App Brand & Logo Header
+                    const AuthHeader(),
+                    SizedBox(height: 16.h),
 
-                  // // Quick Demo Credentials Selector
-                  // AuthDemoSwitcher(controller: controller),
-                  SizedBox(height: 14.h),
+                    // Central Glassmorphic Form Card
+                    AuthGlassCard(
+                      padding: EdgeInsets.all(16.w),
+                      borderRadius: 22.r,
+                      child: Column(
+                        children: [
+                          // Glass Tab Selector (Sign In vs Register)
+                          AuthTabSelector(tabController: _tabController),
+                          SizedBox(height: 16.h),
 
-                  // Central Glassmorphic Form Card
-                  AuthGlassCard(
-                    padding: EdgeInsets.all(16.w),
-                    borderRadius: 22.r,
-                    child: Column(
-                      children: [
-                        // Glass Tab Selector (Sign In vs Register)
-                        AuthTabSelector(tabController: _tabController),
-                        SizedBox(height: 16.h),
-
-                        // Optimized Form Switcher using IndexedStack (Zero Rebuilds on Swipes)
-                        IndexedStack(
-                          index: _currentIndex,
-                          children: [
-                            AuthLoginForm(controller: controller),
-                            AuthRegisterForm(controller: controller),
-                          ],
-                        ),
-                      ],
+                          // Optimized Form Switcher using IndexedStack (Zero Rebuilds on Swipes)
+                          IndexedStack(
+                            index: _currentIndex,
+                            children: [
+                              AuthLoginForm(controller: controller),
+                              AuthRegisterForm(controller: controller),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 18.h),
+                    SizedBox(height: 18.h),
 
-                  // Quick Access & Social Footer
-                  const AuthSocialFooter(),
-                  SizedBox(height: 16.h),
-                ],
+                    // Quick Access & Social Footer
+                    const AuthSocialFooter(),
+                    SizedBox(height: 16.h),
+                  ],
+                ),
               ),
             ),
           ),

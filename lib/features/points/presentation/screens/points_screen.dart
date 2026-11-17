@@ -12,7 +12,9 @@ class PointsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(PointsController());
+    final controller = Get.isRegistered<PointsController>()
+        ? Get.find<PointsController>()
+        : Get.put(PointsController());
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -24,40 +26,42 @@ class PointsScreen extends StatelessWidget {
           style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tier Hero Card
-            _buildTierHeroCard(context, controller),
-            SizedBox(height: 16.h),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Tier Hero Card wrapped in RepaintBoundary
+              RepaintBoundary(child: _buildTierHeroCard(context, controller)),
+              SizedBox(height: 16.h),
 
-            // Tier Progress Bar
-            _buildTierProgress(controller),
-            SizedBox(height: 20.h),
+              // Tier Progress Bar wrapped in RepaintBoundary
+              RepaintBoundary(child: _buildTierProgress(controller)),
+              SizedBox(height: 20.h),
 
-            // Redeem Points Quick Action
-            _buildRedeemBanner(context, controller),
-            SizedBox(height: 24.h),
+              // Redeem Points Quick Action
+              _buildRedeemBanner(context, controller),
+              SizedBox(height: 24.h),
 
-            // Tier Perks Breakdown
-            Text(
-              'VIP Tier Benefits',
-              style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
-            ),
-            SizedBox(height: 12.h),
-            _buildPerksList(),
-            SizedBox(height: 24.h),
+              // Tier Perks Breakdown
+              Text(
+                'VIP Tier Benefits',
+                style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
+              ),
+              SizedBox(height: 12.h),
+              RepaintBoundary(child: _buildPerksList()),
+              SizedBox(height: 24.h),
 
-            // Points Ledger History
-            Text(
-              'Points History',
-              style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
-            ),
-            SizedBox(height: 12.h),
-            _buildLedgerList(controller),
-          ],
+              // Points Ledger History
+              Text(
+                'Points History',
+                style: AppTextStyle().boldTextStyle(fontSize: 16.sp, color: Colors.white),
+              ),
+              SizedBox(height: 12.h),
+              _buildLedgerList(controller),
+            ],
+          ),
         ),
       ),
     );
@@ -320,44 +324,46 @@ class PointsScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final entry = items[index];
           final isPositive = entry.points > 0;
-          return Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: AppColors.darkSurface,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: AppColors.darkBorder),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  isPositive ? Iconsax.arrow_up_3 : Iconsax.arrow_down,
-                  color: isPositive ? AppColors.gold : AppColors.aviatorRed,
-                  size: 20.sp,
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        entry.source.replaceAll('_', ' '),
-                        style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.white),
-                      ),
-                      Text(
-                        entry.type.code,
-                        style: AppTextStyle().regularTextStyle(fontSize: 10.sp, color: AppColors.darkTextSecondary),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '${isPositive ? "+" : ""}${entry.points} pts',
-                  style: AppTextStyle().boldTextStyle(
-                    fontSize: 13.sp,
+          return RepaintBoundary(
+            child: Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: AppColors.darkSurface,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: AppColors.darkBorder),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isPositive ? Iconsax.arrow_up_3 : Iconsax.arrow_down,
                     color: isPositive ? AppColors.gold : AppColors.aviatorRed,
+                    size: 20.sp,
                   ),
-                ),
-              ],
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          entry.source.replaceAll('_', ' '),
+                          style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.white),
+                        ),
+                        Text(
+                          entry.type.code,
+                          style: AppTextStyle().regularTextStyle(fontSize: 10.sp, color: AppColors.darkTextSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '${isPositive ? "+" : ""}${entry.points} pts',
+                    style: AppTextStyle().boldTextStyle(
+                      fontSize: 13.sp,
+                      color: isPositive ? AppColors.gold : AppColors.aviatorRed,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

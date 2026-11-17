@@ -62,69 +62,83 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Category Filter Pills
-            _buildCategoryPills(),
-            SizedBox(height: 16.h),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Category Filter Pills
+              _buildCategoryPills(),
+              SizedBox(height: 16.h),
 
-            // Game Cards
-            _buildGameHubCard(
-              title: 'Aviator Crash',
-              badge: 'HOTTEST 🔥',
-              multiplier: 'Up to 100X',
-              minStake: 10,
-              maxStake: 5000,
-              accentColor: AppColors.aviatorRed,
-              icon: Icons.flight_takeoff_rounded,
-              imageAsset: IconPath.aviator,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2C141D), Color(0xFF131722)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              onTap: () => Get.to(() => const AviatorScreen()),
-            ),
-            SizedBox(height: 14.h),
+              // Game Cards with RepaintBoundary
+              if (selectedCategory == 'ALL' || selectedCategory == 'CRASH') ...[
+                RepaintBoundary(
+                  child: _buildGameHubCard(
+                    title: 'Aviator Crash',
+                    badge: 'HOTTEST 🔥',
+                    multiplier: 'Up to 100X',
+                    minStake: 10,
+                    maxStake: 5000,
+                    accentColor: AppColors.aviatorRed,
+                    icon: Icons.flight_takeoff_rounded,
+                    imageAsset: IconPath.aviator,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2C141D), Color(0xFF131722)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    onTap: () => Get.to(() => const AviatorScreen()),
+                  ),
+                ),
+                SizedBox(height: 14.h),
+              ],
 
-            _buildGameHubCard(
-              title: 'Cyber Match Rush',
-              badge: 'ARCADE 🧩',
-              multiplier: 'Up to 3.5X',
-              minStake: 20,
-              maxStake: 2000,
-              accentColor: AppColors.neonCyan,
-              icon: Icons.extension_rounded,
-              imageAsset: IconPath.puzzle,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF12232F), Color(0xFF131722)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              onTap: () => Get.to(() => const PuzzleScreen()),
-            ),
-            SizedBox(height: 14.h),
+              if (selectedCategory == 'ALL' || selectedCategory == 'ARCADE') ...[
+                RepaintBoundary(
+                  child: _buildGameHubCard(
+                    title: 'Cyber Match Rush',
+                    badge: 'ARCADE 🧩',
+                    multiplier: 'Up to 3.5X',
+                    minStake: 20,
+                    maxStake: 2000,
+                    accentColor: AppColors.neonCyan,
+                    icon: Icons.extension_rounded,
+                    imageAsset: IconPath.puzzle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF12232F), Color(0xFF131722)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    onTap: () => Get.to(() => const PuzzleScreen()),
+                  ),
+                ),
+                SizedBox(height: 14.h),
+              ],
 
-            _buildGameHubCard(
-              title: 'Lucky Fortune Wheel',
-              badge: 'DAILY WHEEL 🎡',
-              multiplier: 'Win Free Credits',
-              minStake: 25,
-              maxStake: 2500,
-              accentColor: AppColors.gold,
-              icon: Icons.album_rounded,
-              imageAsset: IconPath.fortuneWheel,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2A2213), Color(0xFF131722)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              onTap: () => Get.to(() => const SpinScreen()),
-            ),
-          ],
+              if (selectedCategory == 'ALL' || selectedCategory == 'WHEEL') ...[
+                RepaintBoundary(
+                  child: _buildGameHubCard(
+                    title: 'Lucky Fortune Wheel',
+                    badge: 'DAILY WHEEL 🎡',
+                    multiplier: 'Win Free Credits',
+                    minStake: 25,
+                    maxStake: 2500,
+                    accentColor: AppColors.gold,
+                    icon: Icons.album_rounded,
+                    imageAsset: IconPath.fortuneWheel,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2A2213), Color(0xFF131722)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    onTap: () => Get.to(() => const SpinScreen()),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );

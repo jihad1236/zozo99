@@ -14,7 +14,9 @@ class PuzzleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(PuzzleController());
+    final controller = Get.isRegistered<PuzzleController>()
+        ? Get.find<PuzzleController>()
+        : Get.put(PuzzleController());
     final repository = Get.find<BettingRepository>();
 
     return Scaffold(
@@ -62,44 +64,46 @@ class PuzzleScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          children: [
-            // Game Stats Bar
-            _buildStatsBar(controller),
-            SizedBox(height: 16.h),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            children: [
+              // Game Stats Bar wrapped in RepaintBoundary
+              RepaintBoundary(child: _buildStatsBar(controller)),
+              SizedBox(height: 16.h),
 
-            // 4x4 Cyber Puzzle Matrix
-            _buildPuzzleGrid(controller),
-            SizedBox(height: 20.h),
+              // 4x4 Cyber Puzzle Matrix wrapped in RepaintBoundary
+              RepaintBoundary(child: _buildPuzzleGrid(controller)),
+              SizedBox(height: 20.h),
 
-            // Stake selection & controls
-            _buildControls(controller),
-            SizedBox(height: 16.h),
+              // Stake selection & controls
+              _buildControls(controller),
+              SizedBox(height: 16.h),
 
-            // Rules Card
-            Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: const Color(0xFF181C2B),
-                borderRadius: BorderRadius.circular(14.r),
-                border: Border.all(color: AppColors.darkBorder),
-              ),
-              child: Row(
-                children: [
-                  Icon(Iconsax.info_circle, color: AppColors.neonCyan, size: 20.sp),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Text(
-                      'Swap adjacent tiles to match 3 identical gems. Score 80+ points within 12 moves to win 2X to 3X credits!',
-                      style: AppTextStyle().regularTextStyle(fontSize: 11.sp, color: Colors.white70),
+              // Rules Card
+              Container(
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF181C2B),
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(color: AppColors.darkBorder),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Iconsax.info_circle, color: AppColors.neonCyan, size: 20.sp),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        'Swap adjacent tiles to match 3 identical gems. Score 80+ points within 12 moves to win 2X to 3X credits!',
+                        style: AppTextStyle().regularTextStyle(fontSize: 11.sp, color: Colors.white70),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

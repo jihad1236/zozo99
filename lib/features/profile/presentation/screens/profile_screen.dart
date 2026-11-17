@@ -34,224 +34,230 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: Column(
-          children: [
-            // User Info Header Card
-            StreamBuilder<UserModel?>(
-              stream: repository.currentUserStream,
-              initialData: repository.currentUser,
-              builder: (context, snapshot) {
-                final user = snapshot.data;
-                return Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(20.r),
+      body: ResponsiveLayout(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Column(
+            children: [
+              // User Info Header Card wrapped in RepaintBoundary
+              RepaintBoundary(
+                child: StreamBuilder<UserModel?>(
+                  stream: repository.currentUserStream,
+                  initialData: repository.currentUser,
+                  builder: (context, snapshot) {
+                    final user = snapshot.data;
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(20.r),
+                      decoration: BoxDecoration(
+                        color: AppColors.darkSurface,
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(color: AppColors.darkBorder),
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 36.r,
+                            backgroundColor: user?.isAdmin == true
+                                ? AppColors.aviatorRed
+                                : AppColors.gold,
+                            child: Text(
+                              user?.username.substring(0, 1).toUpperCase() ?? 'U',
+                              style: AppTextStyle().boldTextStyle(
+                                fontSize: 28.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            user?.username ?? 'Gamer',
+                            style: AppTextStyle().boldTextStyle(
+                              fontSize: 18.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            user?.email ?? '',
+                            style: AppTextStyle().regularTextStyle(
+                              fontSize: 12.sp,
+                              color: AppColors.darkTextSecondary,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.gold.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color: AppColors.gold.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Iconsax.crown,
+                                      color: AppColors.gold,
+                                      size: 14.sp,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      '${user?.tier.label.toUpperCase()} VIP',
+                                      style: AppTextStyle().boldTextStyle(
+                                        fontSize: 10.sp,
+                                        color: AppColors.gold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: user?.isAdmin == true
+                                      ? AppColors.aviatorRed.withValues(alpha: 0.15)
+                                      : AppColors.neonCyan.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color: user?.isAdmin == true
+                                        ? AppColors.aviatorRed.withValues(
+                                            alpha: 0.3,
+                                          )
+                                        : AppColors.neonCyan.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Text(
+                                  user?.role.name.toUpperCase() ?? 'CUSTOMER',
+                                  style: AppTextStyle().boldTextStyle(
+                                    fontSize: 10.sp,
+                                    color: user?.isAdmin == true
+                                        ? AppColors.aviatorRed
+                                        : AppColors.neonCyan,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              // Navigation Options List wrapped in RepaintBoundary
+              RepaintBoundary(
+                child: Container(
                   decoration: BoxDecoration(
                     color: AppColors.darkSurface,
-                    borderRadius: BorderRadius.circular(20.r),
+                    borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(color: AppColors.darkBorder),
                   ),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 36.r,
-                        backgroundColor: user?.isAdmin == true
-                            ? AppColors.aviatorRed
-                            : AppColors.gold,
-                        child: Text(
-                          user?.username.substring(0, 1).toUpperCase() ?? 'U',
-                          style: AppTextStyle().boldTextStyle(
-                            fontSize: 28.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        user?.username ?? 'Gamer',
-                        style: AppTextStyle().boldTextStyle(
-                          fontSize: 18.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        user?.email ?? '',
-                        style: AppTextStyle().regularTextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.darkTextSecondary,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.gold.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(20.r),
-                              border: Border.all(
-                                color: AppColors.gold.withValues(alpha: 0.3),
+                      // Admin Console (Available for Admin users)
+                      StreamBuilder<UserModel?>(
+                        stream: repository.currentUserStream,
+                        initialData: repository.currentUser,
+                        builder: (context, snapshot) {
+                          final isAdmin = snapshot.data?.isAdmin ?? false;
+                          if (!isAdmin) return const SizedBox();
+                          return Column(
+                            children: [
+                              _buildProfileOption(
+                                icon: Iconsax.security_user,
+                                title: 'Admin Management Panel',
+                                color: AppColors.aviatorRed,
+                                onTap: () =>
+                                    Get.to(() => const AdminDashboardScreen()),
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Iconsax.crown,
-                                  color: AppColors.gold,
-                                  size: 14.sp,
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  '${user?.tier.label.toUpperCase()} VIP',
-                                  style: AppTextStyle().boldTextStyle(
-                                    fontSize: 10.sp,
-                                    color: AppColors.gold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8.w),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: user?.isAdmin == true
-                                  ? AppColors.aviatorRed.withValues(alpha: 0.15)
-                                  : AppColors.neonCyan.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(20.r),
-                              border: Border.all(
-                                color: user?.isAdmin == true
-                                    ? AppColors.aviatorRed.withValues(
-                                        alpha: 0.3,
-                                      )
-                                    : AppColors.neonCyan.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Text(
-                              user?.role.name.toUpperCase() ?? 'CUSTOMER',
-                              style: AppTextStyle().boldTextStyle(
-                                fontSize: 10.sp,
-                                color: user?.isAdmin == true
-                                    ? AppColors.aviatorRed
-                                    : AppColors.neonCyan,
-                              ),
-                            ),
-                          ),
-                        ],
+                              const Divider(height: 1, color: AppColors.darkBorder),
+                            ],
+                          );
+                        },
+                      ),
+                      _buildProfileOption(
+                        icon: Iconsax.game,
+                        title: 'Game Bets History',
+                        color: AppColors.gold,
+                        onTap: () => Get.to(() => const GameHistoryScreen()),
+                      ),
+                      const Divider(height: 1, color: AppColors.darkBorder),
+                      _buildProfileOption(
+                        icon: Iconsax.notification,
+                        title: 'Notifications',
+                        color: AppColors.neonCyan,
+                        onTap: () => Get.to(() => const NotificationsScreen()),
+                      ),
+                      const Divider(height: 1, color: AppColors.darkBorder),
+                      _buildProfileOption(
+                        icon: Iconsax.user_edit,
+                        title: 'Edit Personal Profile',
+                        color: AppColors.accent,
+                        onTap: () => _showEditProfileDialog(context, repository),
+                      ),
+                      const Divider(height: 1, color: AppColors.darkBorder),
+                      _buildProfileOption(
+                        icon: Iconsax.moon,
+                        title: 'Toggle Dark / Light Theme',
+                        color: AppColors.neonGreen,
+                        onTap: () {
+                          themeController.toggleTheme();
+                        },
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-            SizedBox(height: 16.h),
-
-            // Navigation Options List
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.darkSurface,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.darkBorder),
-              ),
-              child: Column(
-                children: [
-                  // Admin Console (Available for Admin users)
-                  StreamBuilder<UserModel?>(
-                    stream: repository.currentUserStream,
-                    initialData: repository.currentUser,
-                    builder: (context, snapshot) {
-                      final isAdmin = snapshot.data?.isAdmin ?? false;
-                      if (!isAdmin) return const SizedBox();
-                      return Column(
-                        children: [
-                          _buildProfileOption(
-                            icon: Iconsax.security_user,
-                            title: 'Admin Management Panel',
-                            color: AppColors.aviatorRed,
-                            onTap: () =>
-                                Get.to(() => const AdminDashboardScreen()),
-                          ),
-                          const Divider(height: 1, color: AppColors.darkBorder),
-                        ],
-                      );
-                    },
-                  ),
-                  _buildProfileOption(
-                    icon: Iconsax.game,
-                    title: 'Game Bets History',
-                    color: AppColors.gold,
-                    onTap: () => Get.to(() => const GameHistoryScreen()),
-                  ),
-                  const Divider(height: 1, color: AppColors.darkBorder),
-                  _buildProfileOption(
-                    icon: Iconsax.notification,
-                    title: 'Notifications',
-                    color: AppColors.neonCyan,
-                    onTap: () => Get.to(() => const NotificationsScreen()),
-                  ),
-                  const Divider(height: 1, color: AppColors.darkBorder),
-                  _buildProfileOption(
-                    icon: Iconsax.user_edit,
-                    title: 'Edit Personal Profile',
-                    color: AppColors.accent,
-                    onTap: () => _showEditProfileDialog(context, repository),
-                  ),
-                  const Divider(height: 1, color: AppColors.darkBorder),
-                  _buildProfileOption(
-                    icon: Iconsax.moon,
-                    title: 'Toggle Dark / Light Theme',
-                    color: AppColors.neonGreen,
-                    onTap: () {
-                      themeController.toggleTheme();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
-            // Logout Button
-            SizedBox(
-              width: double.infinity,
-              height: 48.h,
-              child: OutlinedButton(
-                onPressed: authController.logout,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.error),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Iconsax.logout,
-                      color: AppColors.error,
-                      size: 20,
+              ),
+              SizedBox(height: 20.h),
+
+              // Logout Button
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: OutlinedButton(
+                  onPressed: authController.logout,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: AppColors.error),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'Log Out',
-                      style: AppTextStyle().boldTextStyle(
-                        fontSize: 14.sp,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Iconsax.logout,
                         color: AppColors.error,
+                        size: 20,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Log Out',
+                        style: AppTextStyle().boldTextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
