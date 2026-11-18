@@ -111,8 +111,8 @@ class AppSizer {
   static double get maxContentWidth => responsive<double>(
     small: double.infinity,
     medium: double.infinity,
-    large: 560,
-    tablet: 720,
+    large: 900,
+    tablet: 1360,
   );
 }
 

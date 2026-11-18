@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -10,26 +10,34 @@ class InternetService extends GetxController with WidgetsBindingObserver {
 
   final RxBool isConnected = true.obs;
 
-  late StreamSubscription<List<ConnectivityResult>> _subscription;
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
   Timer? _retryTimer;
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    _checkConnection();
-    _subscription =
-        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+    if (!kIsWeb) {
+      _checkConnection();
+      _subscription =
+          Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+    } else {
+      isConnected.value = true;
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && !kIsWeb) {
       _checkConnection();
     }
   }
 
   void _onConnectivityChanged(List<ConnectivityResult> results) {
+    if (kIsWeb) {
+      isConnected.value = true;
+      return;
+    }
     if (results.isEmpty || results.every((r) => r == ConnectivityResult.none)) {
       isConnected.value = false;
       _startRetryTimer();
@@ -38,10 +46,10 @@ class InternetService extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  // Periodically re-check while offline — Android emulator often misses stream events
   void _startRetryTimer() {
+    if (kIsWeb) return;
     _retryTimer?.cancel();
-    _retryTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
+    _retryTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
       await _checkConnection();
       if (isConnected.value) {
         _retryTimer?.cancel();
@@ -51,25 +59,28 @@ class InternetService extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _verifyInternet() async {
+    if (kIsWeb) {
+      isConnected.value = true;
+      return;
+    }
     try {
-      final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 5));
-      isConnected.value =
-          result.isNotEmpty && result.first.rawAddress.isNotEmpty;
-      if (!isConnected.value) _startRetryTimer();
+      final results = await Connectivity().checkConnectivity();
+      isConnected.value = results.isNotEmpty && !results.every((r) => r == ConnectivityResult.none);
     } catch (_) {
-      isConnected.value = false;
-      _startRetryTimer();
+      isConnected.value = true;
     }
   }
 
   Future<void> _checkConnection() async {
-    final results = await Connectivity().checkConnectivity();
-    if (results.every((r) => r == ConnectivityResult.none)) {
-      isConnected.value = false;
-      _startRetryTimer();
-    } else {
-      await _verifyInternet();
+    if (kIsWeb) {
+      isConnected.value = true;
+      return;
+    }
+    try {
+      final results = await Connectivity().checkConnectivity();
+      isConnected.value = results.isNotEmpty && !results.every((r) => r == ConnectivityResult.none);
+    } catch (_) {
+      isConnected.value = true;
     }
   }
 
@@ -78,7 +89,7 @@ class InternetService extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
-    _subscription.cancel();
+    _subscription?.cancel();
     _retryTimer?.cancel();
     super.onClose();
   }

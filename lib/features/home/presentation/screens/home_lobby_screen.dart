@@ -19,135 +19,246 @@ class HomeLobbyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repository = Get.find<BettingRepository>();
+    final isWideWeb = MediaQuery.of(context).size.width >= 800;
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
-        elevation: 0,
-        title: StreamBuilder<UserModel?>(
-          stream: repository.currentUserStream,
-          initialData: repository.currentUser,
-          builder: (context, snapshot) {
-            final user = snapshot.data;
-            return Row(
-              children: [
-                CircleAvatar(
-                  radius: 18.r,
-                  backgroundColor: AppColors.aviatorRed,
-                  child: Text(
-                    user?.username.substring(0, 1).toUpperCase() ?? 'U',
-                    style: AppTextStyle().boldTextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 90.w,
-                      child: Text(
-                        user?.username ?? 'Gamer',
-                        style: AppTextStyle().boldTextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.white,
+      appBar: isWideWeb
+          ? null
+          : AppBar(
+              backgroundColor: AppColors.darkBackground,
+              elevation: 0,
+              title: StreamBuilder<UserModel?>(
+                stream: repository.currentUserStream,
+                initialData: repository.currentUser,
+                builder: (context, snapshot) {
+                  final user = snapshot.data;
+                  return Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18.r,
+                        backgroundColor: AppColors.aviatorRed,
+                        child: Text(
+                          user?.username.substring(0, 1).toUpperCase() ?? 'U',
+                          style: AppTextStyle().boldTextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.white,
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 1.h,
+                      SizedBox(width: 10.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 90.w,
+                            child: Text(
+                              user?.username ?? 'Gamer',
+                              style: AppTextStyle().boldTextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 1.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.gold.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: Text(
+                              '${user?.tier.label.toUpperCase() ?? "SILVER"} VIP',
+                              style: AppTextStyle().boldTextStyle(
+                                fontSize: 9.sp,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ],
+                  );
+                },
+              ),
+              actions: [
+                // Credits Pill + Deposit Button
+                StreamBuilder<WalletModel?>(
+                  stream: repository.walletStream,
+                  initialData: repository.currentWallet,
+                  builder: (context, snapshot) {
+                    final credits = snapshot.data?.creditBalance ?? 0.0;
+                    return Container(
+                      margin: EdgeInsets.only(right: 8.w),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: AppColors.gold.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Text(
-                        '${user?.tier.label.toUpperCase() ?? "SILVER"} VIP',
-                        style: AppTextStyle().boldTextStyle(
-                          fontSize: 9.sp,
-                          color: AppColors.gold,
+                        color: AppColors.darkSurface,
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: AppColors.gold.withValues(alpha: 0.3),
                         ),
                       ),
-                    ),
-                  ],
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.bolt_rounded,
+                            color: AppColors.gold,
+                            size: 16.sp,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${credits.toInt()}',
+                            style: AppTextStyle().boldTextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          InkWell(
+                            onTap: () => Get.to(() => const DepositScreen()),
+                            child: Container(
+                              padding: EdgeInsets.all(4.r),
+                              decoration: const BoxDecoration(
+                                color: AppColors.neonGreen,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.black,
+                                size: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                // Notifications Bell
+                IconButton(
+                  icon: const Icon(Iconsax.notification, color: Colors.white),
+                  onPressed: () => Get.to(() => const NotificationsScreen()),
                 ),
               ],
-            );
-          },
-        ),
-        actions: [
-          // Credits Pill + Deposit Button
-          StreamBuilder<WalletModel?>(
-            stream: repository.walletStream,
-            initialData: repository.currentWallet,
-            builder: (context, snapshot) {
-              final credits = snapshot.data?.creditBalance ?? 0.0;
-              return Container(
-                margin: EdgeInsets.only(right: 8.w),
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: AppColors.darkSurface,
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
-                    color: AppColors.gold.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.bolt_rounded,
-                      color: AppColors.gold,
-                      size: 16.sp,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '${credits.toInt()}',
-                      style: AppTextStyle().boldTextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    InkWell(
-                      onTap: () => Get.to(() => const DepositScreen()),
-                      child: Container(
-                        padding: EdgeInsets.all(4.r),
-                        decoration: const BoxDecoration(
-                          color: AppColors.neonGreen,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          // Notifications Bell
-          IconButton(
-            icon: const Icon(Iconsax.notification, color: Colors.white),
-            onPressed: () => Get.to(() => const NotificationsScreen()),
-          ),
-        ],
-      ),
+            ),
       body: ResponsiveLayout(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWideWeb ? 24 : 16.w,
+            vertical: isWideWeb ? 24 : 8.h,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (isWideWeb) ...[
+                StreamBuilder<UserModel?>(
+                  stream: repository.currentUserStream,
+                  initialData: repository.currentUser,
+                  builder: (context, snapshot) {
+                    final user = snapshot.data;
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F1524).withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: const Color(0xFF222C40)),
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFF162035).withValues(alpha: 0.7),
+                            const Color(0xFF0C1019).withValues(alpha: 0.5),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.35),
+                            blurRadius: 20,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 26,
+                            backgroundColor: AppColors.gold.withValues(alpha: 0.2),
+                            child: Text(
+                              user?.username.substring(0, 1).toUpperCase() ?? 'U',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Welcome, ${user?.username ?? "Gamer"}!',
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                      letterSpacing: 0.6,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.gold.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
+                                    ),
+                                    child: Text(
+                                      '${user?.tier.label.toUpperCase() ?? "SILVER"} VIP',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.gold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Your live sports betting arena, live crash odds, and casino rewards',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF8B9CB5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.flight_takeoff_rounded, color: Colors.white, size: 18),
+                            label: const Text(
+                              'Play Aviator',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.aviatorRed,
+                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onPressed: () => Get.to(() => const AviatorScreen()),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
               // Live Winning Marquee Ticker
               RepaintBoundary(child: _buildLiveWinningTicker()),
               SizedBox(height: 14.h),

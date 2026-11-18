@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,32 +19,113 @@ class WalletScreen extends StatelessWidget {
         ? Get.find<WalletController>()
         : Get.put(WalletController());
 
+    final isWideWeb = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
-        elevation: 0,
-        centerTitle: false,
-        title: Text(
-          'Wallet & Cashier',
-          style: AppTextStyle().boldTextStyle(fontSize: 20.sp, color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Iconsax.refresh, color: AppColors.darkTextSecondary, size: 20.sp),
-            onPressed: () {
-              Get.snackbar('Refreshed', 'Wallet balance synced with server ledger.',
-                  backgroundColor: AppColors.darkSurface, colorText: Colors.white);
-            },
-          ),
-        ],
-      ),
+      appBar: isWideWeb
+          ? null
+          : AppBar(
+              backgroundColor: AppColors.darkBackground,
+              elevation: 0,
+              centerTitle: false,
+              title: Text(
+                'Wallet & Cashier',
+                style: AppTextStyle().boldTextStyle(fontSize: 20.sp, color: Colors.white),
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(Iconsax.refresh, color: AppColors.darkTextSecondary, size: 20.sp),
+                  onPressed: () {
+                    Get.snackbar('Refreshed', 'Wallet balance synced with server ledger.',
+                        backgroundColor: AppColors.darkSurface, colorText: Colors.white);
+                  },
+                ),
+              ],
+            ),
       body: ResponsiveLayout(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWideWeb ? 24 : 16.w,
+            vertical: isWideWeb ? 24 : 8.h,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (isWideWeb) ...[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F1524).withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: const Color(0xFF222C40)),
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF162035).withValues(alpha: 0.7),
+                        const Color(0xFF0C1019).withValues(alpha: 0.5),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                        ),
+                        child: const Icon(Iconsax.wallet_3, color: AppColors.gold, size: 28),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'WALLET & CASHIER',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.6,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Multi-currency ledger, instant crypto deposits and zero-fee withdrawals',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF8B9CB5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        icon: const Icon(Iconsax.add_circle, color: Colors.black, size: 18),
+                        label: const Text(
+                          'Deposit Funds',
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.neonGreen,
+                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () => Get.to(() => const DepositScreen()),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               // Dual Balance Card wrapped in RepaintBoundary
               RepaintBoundary(child: _buildBalanceHeroCard(context, controller)),
               SizedBox(height: 16.h),
@@ -86,26 +168,34 @@ class WalletScreen extends StatelessWidget {
   }
 
   Widget _buildBalanceHeroCard(BuildContext context, WalletController controller) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22.r),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF22283A), Color(0xFF141722)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border.all(color: AppColors.accent.withValues(alpha: 0.25), width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.accent.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(22.r),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20.r),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22.r),
+            color: const Color(0xFF141926).withValues(alpha: 0.8),
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFF222C42).withValues(alpha: 0.75),
+                const Color(0xFF121622).withValues(alpha: 0.85),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(color: AppColors.accent.withValues(alpha: 0.35), width: 1.2),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accent.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -201,6 +291,8 @@ class WalletScreen extends StatelessWidget {
             ],
           ),
         ],
+      ),
+        ),
       ),
     );
   }

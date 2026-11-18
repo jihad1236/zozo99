@@ -75,25 +75,42 @@ class LandingHeader extends StatelessWidget {
                         onPressed: () => Get.toNamed(AppRoute.loginScreen),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFF2C3545)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 8.h,
+                          ),
                         ),
                         child: Text(
                           'Log in',
-                          style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.white),
+                          style: AppTextStyle().boldTextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton(
                         onPressed: () => Get.toNamed(AppRoute.loginScreen),
                         style: ElevatedButton.styleFrom(
+                          side: BorderSide.none,
                           backgroundColor: AppColors.emeraldGreen,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 8.h,
+                          ),
                         ),
                         child: Text(
                           'Sign up',
-                          style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.black),
+                          style: AppTextStyle().boldTextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],
@@ -109,30 +126,47 @@ class LandingHeader extends StatelessWidget {
                     return Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF161C26),
                             borderRadius: BorderRadius.circular(20.r),
-                            border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                            border: Border.all(
+                              color: AppColors.gold.withValues(alpha: 0.3),
+                            ),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.bolt_rounded, color: AppColors.gold, size: 16.sp),
+                              Icon(
+                                Icons.bolt_rounded,
+                                color: AppColors.gold,
+                                size: 16.sp,
+                              ),
                               SizedBox(width: 4.w),
                               Text(
                                 '${credits.toInt()}',
-                                style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.white),
+                                style: AppTextStyle().boldTextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.white,
+                                ),
                               ),
                               SizedBox(width: 6.w),
                               InkWell(
-                                onTap: () => Get.to(() => const DepositScreen()),
+                                onTap: () =>
+                                    Get.to(() => const DepositScreen()),
                                 child: Container(
                                   padding: EdgeInsets.all(3.r),
                                   decoration: const BoxDecoration(
                                     color: AppColors.emeraldGreen,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.add, color: Colors.black, size: 12),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: Colors.black,
+                                    size: 12,
+                                  ),
                                 ),
                               ),
                             ],
@@ -143,8 +177,13 @@ class LandingHeader extends StatelessWidget {
                           radius: 16.r,
                           backgroundColor: AppColors.aviatorRed,
                           child: Text(
-                            user.username.isNotEmpty ? user.username[0].toUpperCase() : 'U',
-                            style: AppTextStyle().boldTextStyle(fontSize: 12.sp, color: Colors.white),
+                            user.username.isNotEmpty
+                                ? user.username[0].toUpperCase()
+                                : 'U',
+                            style: AppTextStyle().boldTextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],

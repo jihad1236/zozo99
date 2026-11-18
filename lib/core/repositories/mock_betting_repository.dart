@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:zozo99/core/models/betting_models.dart';
 import 'package:zozo99/core/repositories/betting_repository.dart';
@@ -14,12 +15,15 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   final RxList<UserModel> _allUsers = <UserModel>[].obs;
   final Map<String, WalletModel> _userWallets = {};
   final RxList<TransactionModel> _transactions = <TransactionModel>[].obs;
-  final RxList<DepositRequestModel> _depositRequests = <DepositRequestModel>[].obs;
-  final RxList<WithdrawalRequestModel> _withdrawalRequests = <WithdrawalRequestModel>[].obs;
+  final RxList<DepositRequestModel> _depositRequests =
+      <DepositRequestModel>[].obs;
+  final RxList<WithdrawalRequestModel> _withdrawalRequests =
+      <WithdrawalRequestModel>[].obs;
   final RxList<GameModel> _games = <GameModel>[].obs;
   final RxList<GameBetModel> _gameBets = <GameBetModel>[].obs;
   final RxList<PointsLedgerModel> _pointsLedger = <PointsLedgerModel>[].obs;
-  final RxList<AppNotificationModel> _notifications = <AppNotificationModel>[].obs;
+  final RxList<AppNotificationModel> _notifications =
+      <AppNotificationModel>[].obs;
   final RxList<AdminActionModel> _auditLogs = <AdminActionModel>[].obs;
 
   // Aviator Server Simulation State
@@ -54,10 +58,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   List<TransactionModel> get transactions => _transactions;
 
   @override
-  Stream<List<DepositRequestModel>> get depositRequestsStream => _depositRequests.stream;
+  Stream<List<DepositRequestModel>> get depositRequestsStream =>
+      _depositRequests.stream;
 
   @override
-  Stream<List<WithdrawalRequestModel>> get withdrawalRequestsStream => _withdrawalRequests.stream;
+  Stream<List<WithdrawalRequestModel>> get withdrawalRequestsStream =>
+      _withdrawalRequests.stream;
 
   @override
   Stream<List<GameModel>> get gamesStream => _games.stream;
@@ -77,12 +83,14 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   double get currentAviatorMultiplier => _currentClimbingMultiplier;
 
   @override
-  Stream<List<PointsLedgerModel>> get pointsLedgerStream => _pointsLedger.stream;
+  Stream<List<PointsLedgerModel>> get pointsLedgerStream =>
+      _pointsLedger.stream;
   @override
   List<PointsLedgerModel> get pointsLedger => _pointsLedger;
 
   @override
-  Stream<List<AppNotificationModel>> get notificationsStream => _notifications.stream;
+  Stream<List<AppNotificationModel>> get notificationsStream =>
+      _notifications.stream;
 
   @override
   Stream<List<UserModel>> get allUsersStream => _allUsers.stream;
@@ -90,7 +98,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   List<UserModel> get allUsers => _allUsers;
 
   @override
-  Stream<List<WithdrawalRequestModel>> get allWithdrawalRequestsStream => _withdrawalRequests.stream;
+  Stream<List<WithdrawalRequestModel>> get allWithdrawalRequestsStream =>
+      _withdrawalRequests.stream;
 
   @override
   Stream<List<AdminActionModel>> get adminAuditLogsStream => _auditLogs.stream;
@@ -121,7 +130,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       status: UserStatus.active,
       points: 1850,
       tier: VipTier.gold,
-      avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+      avatarUrl:
+          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
       createdAt: now.subtract(const Duration(days: 30)),
       updatedAt: now,
     );
@@ -135,7 +145,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       status: UserStatus.active,
       points: 7500,
       tier: VipTier.diamond,
-      avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150',
+      avatarUrl:
+          'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150',
       createdAt: now.subtract(const Duration(days: 90)),
       updatedAt: now,
     );
@@ -205,9 +216,9 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       updatedAt: now,
     );
 
-    // Set Default active user as Customer
-    _currentUser.value = customer;
-    _currentWallet.value = _userWallets[customer.uid];
+    // Default active user is Guest (null) - user must sign up or log in
+    _currentUser.value = null;
+    _currentWallet.value = null;
 
     // Seed Games
     _games.assignAll([
@@ -385,7 +396,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
         adminUsername: admin.username,
         actionType: 'SYSTEM_BOOT',
         targetUid: 'SYSTEM',
-        details: 'Initial system seed and security rules compiled successfully.',
+        details:
+            'Initial system seed and security rules compiled successfully.',
         createdAt: now.subtract(const Duration(days: 1)),
       ),
       AdminActionModel(
@@ -402,7 +414,10 @@ class MockBettingRepository extends GetxService implements BettingRepository {
 
   // ─── Authentication Operations ───────────────────────────────────
   @override
-  Future<UserModel> login({required String email, required String password}) async {
+  Future<UserModel> login({
+    required String email,
+    required String password,
+  }) async {
     await Future.delayed(const Duration(milliseconds: 500));
     final matched = _allUsers.firstWhereOrNull(
       (u) => u.email.toLowerCase() == email.trim().toLowerCase(),
@@ -416,7 +431,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     }
 
     _currentUser.value = matched;
-    _currentWallet.value = _userWallets[matched.uid] ??
+    _currentWallet.value =
+        _userWallets[matched.uid] ??
         WalletModel(uid: matched.uid, updatedAt: DateTime.now());
     return matched;
   }
@@ -482,12 +498,18 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }
 
   @override
-  Future<void> updateProfile({String? username, String? phone, String? avatarUrl}) async {
+  Future<void> updateProfile({
+    String? username,
+    String? phone,
+    String? avatarUrl,
+  }) async {
     final user = _currentUser.value;
     if (user == null) return;
 
     final updated = user.copyWith(
-      username: username?.trim().isNotEmpty == true ? username!.trim() : user.username,
+      username: username?.trim().isNotEmpty == true
+          ? username!.trim()
+          : user.username,
       phone: phone?.trim().isNotEmpty == true ? phone!.trim() : user.phone,
       avatarUrl: avatarUrl ?? user.avatarUrl,
       updatedAt: DateTime.now(),
@@ -506,8 +528,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
 
   @override
   Future<void> switchDemoRole(UserRole role) async {
-    final target = _allUsers.firstWhereOrNull((u) => u.role == role) ??
-        _allUsers.first;
+    final target =
+        _allUsers.firstWhereOrNull((u) => u.role == role) ?? _allUsers.first;
     _currentUser.value = target;
     _currentWallet.value = _userWallets[target.uid];
   }
@@ -517,9 +539,11 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   Future<void> convertCashToCredits(double cashAmount) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (cashAmount <= 0) throw Exception('Enter a valid amount.');
-    if (wallet.cashBalance < cashAmount) throw Exception('Insufficient cash balance.');
+    if (wallet.cashBalance < cashAmount)
+      throw Exception('Insufficient cash balance.');
 
     final creditsToAdd = cashAmount * 100.0;
     final updatedWallet = wallet.copyWith(
@@ -538,22 +562,31 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       currency: 'USD',
       status: TransactionStatus.completed,
       referenceId: 'CONV-${_rng.nextInt(90000) + 10000}',
-      description: 'Converted \$${cashAmount.toStringAsFixed(2)} to ${creditsToAdd.toInt()} Credits',
+      description:
+          'Converted \$${cashAmount.toStringAsFixed(2)} to ${creditsToAdd.toInt()} Credits',
       createdAt: DateTime.now(),
     );
     _transactions.insert(0, tx);
 
     // Award Points (1 point per \$1 converted)
-    _awardPoints(user.uid, (cashAmount * 1.5).toInt(), PointType.earn, 'CONVERT_BONUS');
+    _awardPoints(
+      user.uid,
+      (cashAmount * 1.5).toInt(),
+      PointType.earn,
+      'CONVERT_BONUS',
+    );
   }
 
   @override
   Future<void> convertCreditsToCash(double creditAmount) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
-    if (creditAmount < 100) throw Exception('Minimum conversion is 100 credits.');
-    if (wallet.creditBalance < creditAmount) throw Exception('Insufficient credits.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
+    if (creditAmount < 100)
+      throw Exception('Minimum conversion is 100 credits.');
+    if (wallet.creditBalance < creditAmount)
+      throw Exception('Insufficient credits.');
 
     final cashToAdd = creditAmount / 100.0;
     final updatedWallet = wallet.copyWith(
@@ -572,7 +605,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       currency: 'USD',
       status: TransactionStatus.completed,
       referenceId: 'CONV-${_rng.nextInt(90000) + 10000}',
-      description: 'Exchanged ${creditAmount.toInt()} Credits for \$${cashToAdd.toStringAsFixed(2)} Cash',
+      description:
+          'Exchanged ${creditAmount.toInt()} Credits for \$${cashToAdd.toStringAsFixed(2)} Cash',
       createdAt: DateTime.now(),
     );
     _transactions.insert(0, tx);
@@ -588,7 +622,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (amount < 10) throw Exception('Minimum deposit is \$10.00.');
     if (amount > 10000) throw Exception('Maximum deposit is \$10,000.00.');
 
@@ -602,7 +637,9 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       paymentMethod: paymentMethod,
       accountNumber: accountNumber,
       transactionRef: ref,
-      status: simulateInstantSuccess ? TransactionStatus.completed : TransactionStatus.pending,
+      status: simulateInstantSuccess
+          ? TransactionStatus.completed
+          : TransactionStatus.pending,
       createdAt: now,
     );
 
@@ -631,7 +668,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       _transactions.insert(0, tx);
 
       // Deposit bonus points
-      _awardPoints(user.uid, (amount * 2).toInt(), PointType.bonus, 'DEPOSIT_REWARD');
+      _awardPoints(
+        user.uid,
+        (amount * 2).toInt(),
+        PointType.bonus,
+        'DEPOSIT_REWARD',
+      );
 
       // Notification
       _notifications.insert(
@@ -640,7 +682,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
           id: 'notif_${now.millisecondsSinceEpoch}',
           uid: user.uid,
           title: 'Deposit Received! 💰',
-          message: '\$${amount.toStringAsFixed(2)} was successfully added to your cash balance.',
+          message:
+              '\$${amount.toStringAsFixed(2)} was successfully added to your cash balance.',
           type: 'WALLET',
           isRead: false,
           createdAt: now,
@@ -661,11 +704,14 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (amount < 20) throw Exception('Minimum withdrawal is \$20.00.');
     if (amount > 5000) throw Exception('Maximum withdrawal is \$5,000.00.');
     if (wallet.cashBalance < amount) {
-      throw Exception('Insufficient cash balance. Available: \$${wallet.cashBalance.toStringAsFixed(2)}');
+      throw Exception(
+        'Insufficient cash balance. Available: \$${wallet.cashBalance.toStringAsFixed(2)}',
+      );
     }
 
     final ref = 'WTH-${_rng.nextInt(900000) + 100000}';
@@ -713,7 +759,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
         id: 'notif_${now.millisecondsSinceEpoch}',
         uid: user.uid,
         title: 'Withdrawal Submitted ⏳',
-        message: 'Your request for \$${amount.toStringAsFixed(2)} via $method is being processed.',
+        message:
+            'Your request for \$${amount.toStringAsFixed(2)} via $method is being processed.',
         type: 'WALLET',
         isRead: false,
         createdAt: now,
@@ -738,11 +785,14 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       final randVal = _rng.nextDouble();
       double targetCrash;
       if (randVal < 0.10) {
-        targetCrash = 1.05 + (_rng.nextDouble() * 0.20); // 1.05x - 1.25x early crash
+        targetCrash =
+            1.05 + (_rng.nextDouble() * 0.20); // 1.05x - 1.25x early crash
       } else if (randVal < 0.65) {
-        targetCrash = 1.30 + (_rng.nextDouble() * 2.50); // 1.30x - 3.80x normal range
+        targetCrash =
+            1.30 + (_rng.nextDouble() * 2.50); // 1.30x - 3.80x normal range
       } else if (randVal < 0.90) {
-        targetCrash = 3.80 + (_rng.nextDouble() * 6.00); // 3.80x - 9.80x high range
+        targetCrash =
+            3.80 + (_rng.nextDouble() * 6.00); // 3.80x - 9.80x high range
       } else {
         targetCrash = 10.0 + (_rng.nextDouble() * 25.0); // 10.0x - 35.0x moon!
       }
@@ -776,7 +826,9 @@ class MockBettingRepository extends GetxService implements BettingRepository {
         // Exponential flight curve
         final increment = 0.01 + (multiplier * 0.005);
         multiplier += increment;
-        _currentClimbingMultiplier = double.parse(multiplier.toStringAsFixed(2));
+        _currentClimbingMultiplier = double.parse(
+          multiplier.toStringAsFixed(2),
+        );
 
         // Auto Cashout check
         if (_activeAviatorBet != null &&
@@ -807,7 +859,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       );
 
       // If active bet was not cashed out, mark as LOST
-      if (_activeAviatorBet != null && _activeAviatorBet!.status == BetStatus.placed) {
+      if (_activeAviatorBet != null &&
+          _activeAviatorBet!.status == BetStatus.placed) {
         final lostBet = _activeAviatorBet!.copyWith(
           status: BetStatus.lost,
           cashoutMultiplier: targetCrash,
@@ -840,13 +893,18 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('Please log in to place bets.');
+    if (user == null || wallet == null)
+      throw Exception('Please log in to place bets.');
     if (_aviatorRound.value.status != RoundStatus.waiting) {
-      throw Exception('Betting closed for current round. Please wait for the next countdown.');
+      throw Exception(
+        'Betting closed for current round. Please wait for the next countdown.',
+      );
     }
     if (stake < 10) throw Exception('Minimum stake is 10 Credits.');
     if (wallet.creditBalance < stake) {
-      throw Exception('Insufficient credits! Available: ${wallet.creditBalance.toInt()} Credits.');
+      throw Exception(
+        'Insufficient credits! Available: ${wallet.creditBalance.toInt()} Credits.',
+      );
     }
 
     // Server-side debit
@@ -890,7 +948,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     );
 
     // Points earned on wager
-    _awardPoints(user.uid, (stake / 10).clamp(1, 50).toInt(), PointType.earn, 'AVIATOR_WAGER');
+    _awardPoints(
+      user.uid,
+      (stake / 10).clamp(1, 50).toInt(),
+      PointType.earn,
+      'AVIATOR_WAGER',
+    );
 
     return bet;
   }
@@ -902,7 +965,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (_aviatorRound.value.status != RoundStatus.running) {
       throw Exception('Plane already crashed or round not running.');
     }
@@ -942,7 +1006,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
         currency: 'CREDITS',
         status: TransactionStatus.completed,
         referenceId: betId,
-        description: 'Aviator Won at ${currentMultiplier.toStringAsFixed(2)}x (+${payout.toInt()} Credits)',
+        description:
+            'Aviator Won at ${currentMultiplier.toStringAsFixed(2)}x (+${payout.toInt()} Credits)',
         createdAt: DateTime.now(),
       ),
     );
@@ -960,7 +1025,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (wallet.creditBalance < stake) throw Exception('Insufficient credits.');
 
     // Debit stake
@@ -1017,7 +1083,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     );
 
     if (won) {
-      _awardPoints(user.uid, (payout / 5).toInt(), PointType.earn, 'PUZZLE_WIN');
+      _awardPoints(
+        user.uid,
+        (payout / 5).toInt(),
+        PointType.earn,
+        'PUZZLE_WIN',
+      );
     }
 
     return bet;
@@ -1033,7 +1104,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (wallet.creditBalance < stake) throw Exception('Insufficient credits.');
 
     // Debit stake + add reward
@@ -1120,7 +1192,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
             id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
             uid: uid,
             title: 'Tier Upgrade! 🏆',
-            message: 'You have ascended to ${newTier.label} Tier! Enjoy enhanced cashback & perks.',
+            message:
+                'You have ascended to ${newTier.label} Tier! Enjoy enhanced cashback & perks.',
             type: 'TIER',
             isRead: false,
             createdAt: DateTime.now(),
@@ -1134,7 +1207,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   Future<void> redeemPointsToCredits(int points) async {
     final user = _currentUser.value;
     final wallet = _currentWallet.value;
-    if (user == null || wallet == null) throw Exception('User not authenticated.');
+    if (user == null || wallet == null)
+      throw Exception('User not authenticated.');
     if (points < 100) throw Exception('Minimum redemption is 100 points.');
     if (user.points < points) throw Exception('Insufficient VIP points.');
 
@@ -1181,7 +1255,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
         currency: 'CREDITS',
         status: TransactionStatus.completed,
         referenceId: 'PTS-RED',
-        description: 'Redeemed $points VIP Points for ${creditsToAdd.toInt()} Credits',
+        description:
+            'Redeemed $points VIP Points for ${creditsToAdd.toInt()} Credits',
         createdAt: DateTime.now(),
       ),
     );
@@ -1217,9 +1292,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
 
     // Log admin action
     _recordAdminAction(
-      actionType: newStatus == UserStatus.blocked ? 'BLOCK_USER' : 'UNBLOCK_USER',
+      actionType: newStatus == UserStatus.blocked
+          ? 'BLOCK_USER'
+          : 'UNBLOCK_USER',
       targetUid: uid,
-      details: '${admin?.username ?? "Admin"} changed status of ${user.username} to ${newStatus.name}',
+      details:
+          '${admin?.username ?? "Admin"} changed status of ${user.username} to ${newStatus.name}',
     );
   }
 
@@ -1236,7 +1314,10 @@ class MockBettingRepository extends GetxService implements BettingRepository {
 
     final updatedWallet = targetWallet.copyWith(
       cashBalance: (targetWallet.cashBalance + cashDelta).clamp(0.0, 9999999.0),
-      creditBalance: (targetWallet.creditBalance + creditDelta).clamp(0.0, 9999999.0),
+      creditBalance: (targetWallet.creditBalance + creditDelta).clamp(
+        0.0,
+        9999999.0,
+      ),
       updatedAt: DateTime.now(),
     );
     _userWallets[targetUid] = updatedWallet;
@@ -1245,7 +1326,12 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     }
 
     if (pointsDelta != 0) {
-      _awardPoints(targetUid, pointsDelta, PointType.adjustment, 'ADMIN_ADJUSTMENT');
+      _awardPoints(
+        targetUid,
+        pointsDelta,
+        PointType.adjustment,
+        'ADMIN_ADJUSTMENT',
+      );
     }
 
     _recordAdminAction(
@@ -1268,7 +1354,9 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     _withdrawalRequests[idx] = updated;
 
     // Update corresponding transaction
-    final txIdx = _transactions.indexWhere((t) => t.referenceId == req.referenceId);
+    final txIdx = _transactions.indexWhere(
+      (t) => t.referenceId == req.referenceId,
+    );
     if (txIdx != -1) {
       _transactions[txIdx] = TransactionModel(
         id: _transactions[txIdx].id,
@@ -1319,7 +1407,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
     _recordAdminAction(
       actionType: 'REJECT_WITHDRAWAL',
       targetUid: req.uid,
-      details: 'Rejected withdrawal ${req.referenceId} (\$${req.amount}). Reason: $reason',
+      details:
+          'Rejected withdrawal ${req.referenceId} (\$${req.amount}). Reason: $reason',
     );
   }
 
@@ -1338,7 +1427,11 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   }
 
   @override
-  Future<void> updateGameStakes(String gameId, double minStake, double maxStake) async {
+  Future<void> updateGameStakes(
+    String gameId,
+    double minStake,
+    double maxStake,
+  ) async {
     final idx = _games.indexWhere((g) => g.id == gameId);
     if (idx != -1) {
       final current = _games[idx];
@@ -1346,7 +1439,8 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       _recordAdminAction(
         actionType: 'UPDATE_STAKES',
         targetUid: gameId,
-        details: 'Updated ${current.name} stakes to min: $minStake, max: $maxStake',
+        details:
+            'Updated ${current.name} stakes to min: $minStake, max: $maxStake',
       );
     }
   }

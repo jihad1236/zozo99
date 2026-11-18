@@ -351,7 +351,9 @@ class LandingController extends GetxController {
       list = allGames.where((g) => g['isPopular'] == true).toList();
     } else {
       list = allGames
-          .where((g) => (g['category'] as String).toLowerCase() == cat.toLowerCase())
+          .where(
+            (g) => (g['category'] as String).toLowerCase() == cat.toLowerCase(),
+          )
           .toList();
       // If a category has fewer items, include popular games as recommended
       if (list.isEmpty) {
@@ -363,9 +365,14 @@ class LandingController extends GetxController {
     final sort = selectedSort.value;
     final sorted = List<Map<String, dynamic>>.from(list);
     if (sort == 'Highest Multiplier') {
-      sorted.sort((a, b) => (b['multiplierVal'] as int).compareTo(a['multiplierVal'] as int));
+      sorted.sort(
+        (a, b) =>
+            (b['multiplierVal'] as int).compareTo(a['multiplierVal'] as int),
+      );
     } else if (sort == 'A - Z') {
-      sorted.sort((a, b) => (a['title'] as String).compareTo(b['title'] as String));
+      sorted.sort(
+        (a, b) => (a['title'] as String).compareTo(b['title'] as String),
+      );
     }
     return sorted;
   }
@@ -415,9 +422,20 @@ class LandingController extends GetxController {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Row(
           children: const [
-            Icon(Icons.sports_esports_rounded, color: Color(0xFF00B67A), size: 24),
+            Icon(
+              Icons.sports_esports_rounded,
+              color: Color(0xFF00B67A),
+              size: 24,
+            ),
             SizedBox(width: 8),
-            Text('Play Game', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              'Play Game',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
         content: Column(
@@ -426,7 +444,11 @@ class LandingController extends GetxController {
           children: const [
             Text(
               'You are browsing as a Guest. Would you like to try the Free Demo or Sign In to play with live credits and earn VIP points?',
-              style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                height: 1.4,
+              ),
             ),
           ],
         ),
@@ -436,7 +458,13 @@ class LandingController extends GetxController {
               Get.back();
               _navigateToGame(type); // Direct demo play
             },
-            child: const Text('Try Free Demo', style: TextStyle(color: Color(0xFF00E5FF), fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Try Free Demo',
+              style: TextStyle(
+                color: Color(0xFF00E5FF),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -444,10 +472,19 @@ class LandingController extends GetxController {
               Get.toNamed(AppRoute.loginScreen);
             },
             style: ElevatedButton.styleFrom(
+              side: BorderSide.none,
               backgroundColor: const Color(0xFF00B67A),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            child: const Text('Sign In / Register', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Sign In / Register',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

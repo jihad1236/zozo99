@@ -11,6 +11,7 @@ import 'package:zozo99/features/admin/presentation/screens/admin_dashboard_scree
 import 'package:zozo99/features/authentication/controllers/auth_controller.dart';
 import 'package:zozo99/features/games/presentation/screens/game_history_screen.dart';
 import 'package:zozo99/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:zozo99/routes/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -21,24 +22,102 @@ class ProfileScreen extends StatelessWidget {
     final authController = Get.find<AuthController>();
     final themeController = Get.find<ThemeController>();
 
+    final isWideWeb = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
-        elevation: 0,
-        title: Text(
-          'My Profile',
-          style: AppTextStyle().boldTextStyle(
-            fontSize: 18.sp,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      appBar: isWideWeb
+          ? null
+          : AppBar(
+              backgroundColor: AppColors.darkBackground,
+              elevation: 0,
+              title: Text(
+                'My Profile',
+                style: AppTextStyle().boldTextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
       body: ResponsiveLayout(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWideWeb ? 24 : 16.w,
+            vertical: isWideWeb ? 24 : 8.h,
+          ),
           child: Column(
             children: [
+              if (isWideWeb) ...[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F1524).withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: const Color(0xFF222C40)),
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF162035).withValues(alpha: 0.7),
+                        const Color(0xFF0C1019).withValues(alpha: 0.5),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00B0FF)
+                              .withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: const Color(0xFF00B0FF)
+                                .withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: const Icon(
+                          Iconsax.user,
+                          color: Color(0xFF00B0FF),
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'MY ACCOUNT & PROFILE',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.6,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Account credentials, verification status, preferences and switch accounts',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF8B9CB5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               // User Info Header Card wrapped in RepaintBoundary
               RepaintBoundary(
                 child: StreamBuilder<UserModel?>(
@@ -46,6 +125,70 @@ class ProfileScreen extends StatelessWidget {
                   initialData: repository.currentUser,
                   builder: (context, snapshot) {
                     final user = snapshot.data;
+                    if (user == null) {
+                      return Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(24.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.darkSurface,
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(color: AppColors.darkBorder),
+                        ),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 36.r,
+                              backgroundColor: const Color(0xFF222B3D),
+                              child: Icon(
+                                Iconsax.user,
+                                size: 36.sp,
+                                color: const Color(0xFF8B9CB5),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Text(
+                              'Guest Player',
+                              style: AppTextStyle().boldTextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Sign in or register to access personal bets, VIP level, and cashier',
+                              style: AppTextStyle().regularTextStyle(
+                                fontSize: 12.sp,
+                                color: AppColors.darkTextSecondary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16.h),
+                            ElevatedButton.icon(
+                              onPressed: () =>
+                                  Get.toNamed(AppRoute.loginScreen),
+                              icon: const Icon(Icons.login_rounded, size: 16),
+                              label: const Text(
+                                'Sign In / Register',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                side: BorderSide.none,
+                                backgroundColor: AppColors.neonGreen,
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 24.w,
+                                  vertical: 12.h,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(20.r),
@@ -58,11 +201,13 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 36.r,
-                            backgroundColor: user?.isAdmin == true
+                            backgroundColor: user.isAdmin == true
                                 ? AppColors.aviatorRed
                                 : AppColors.gold,
                             child: Text(
-                              user?.username.substring(0, 1).toUpperCase() ?? 'U',
+                              user.username.isNotEmpty
+                                  ? user.username.substring(0, 1).toUpperCase()
+                                  : 'U',
                               style: AppTextStyle().boldTextStyle(
                                 fontSize: 28.sp,
                                 color: Colors.white,
@@ -71,7 +216,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 12.h),
                           Text(
-                            user?.username ?? 'Gamer',
+                            user.username,
                             style: AppTextStyle().boldTextStyle(
                               fontSize: 18.sp,
                               color: Colors.white,
@@ -79,7 +224,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            user?.email ?? '',
+                            user.email,
                             style: AppTextStyle().regularTextStyle(
                               fontSize: 12.sp,
                               color: AppColors.darkTextSecondary,
@@ -98,7 +243,9 @@ class ProfileScreen extends StatelessWidget {
                                   color: AppColors.gold.withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(20.r),
                                   border: Border.all(
-                                    color: AppColors.gold.withValues(alpha: 0.3),
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.3,
+                                    ),
                                   ),
                                 ),
                                 child: Row(
@@ -110,7 +257,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     SizedBox(width: 4.w),
                                     Text(
-                                      '${user?.tier.label.toUpperCase()} VIP',
+                                      '${user.tier.label.toUpperCase()} VIP',
                                       style: AppTextStyle().boldTextStyle(
                                         fontSize: 10.sp,
                                         color: AppColors.gold,
@@ -126,23 +273,29 @@ class ProfileScreen extends StatelessWidget {
                                   vertical: 4.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: user?.isAdmin == true
-                                      ? AppColors.aviatorRed.withValues(alpha: 0.15)
-                                      : AppColors.neonCyan.withValues(alpha: 0.15),
+                                  color: user.isAdmin == true
+                                      ? AppColors.aviatorRed.withValues(
+                                          alpha: 0.15,
+                                        )
+                                      : AppColors.neonCyan.withValues(
+                                          alpha: 0.15,
+                                        ),
                                   borderRadius: BorderRadius.circular(20.r),
                                   border: Border.all(
-                                    color: user?.isAdmin == true
+                                    color: user.isAdmin == true
                                         ? AppColors.aviatorRed.withValues(
                                             alpha: 0.3,
                                           )
-                                        : AppColors.neonCyan.withValues(alpha: 0.3),
+                                        : AppColors.neonCyan.withValues(
+                                            alpha: 0.3,
+                                          ),
                                   ),
                                 ),
                                 child: Text(
-                                  user?.role.name.toUpperCase() ?? 'CUSTOMER',
+                                  user.role.name.toUpperCase(),
                                   style: AppTextStyle().boldTextStyle(
                                     fontSize: 10.sp,
-                                    color: user?.isAdmin == true
+                                    color: user.isAdmin == true
                                         ? AppColors.aviatorRed
                                         : AppColors.neonCyan,
                                   ),
@@ -184,7 +337,10 @@ class ProfileScreen extends StatelessWidget {
                                 onTap: () =>
                                     Get.to(() => const AdminDashboardScreen()),
                               ),
-                              const Divider(height: 1, color: AppColors.darkBorder),
+                              const Divider(
+                                height: 1,
+                                color: AppColors.darkBorder,
+                              ),
                             ],
                           );
                         },
@@ -207,7 +363,8 @@ class ProfileScreen extends StatelessWidget {
                         icon: Iconsax.user_edit,
                         title: 'Edit Personal Profile',
                         color: AppColors.accent,
-                        onTap: () => _showEditProfileDialog(context, repository),
+                        onTap: () =>
+                            _showEditProfileDialog(context, repository),
                       ),
                       const Divider(height: 1, color: AppColors.darkBorder),
                       _buildProfileOption(
@@ -224,37 +381,44 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 20.h),
 
-              // Logout Button
-              SizedBox(
-                width: double.infinity,
-                height: 48.h,
-                child: OutlinedButton(
-                  onPressed: authController.logout,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.error),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.r),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Iconsax.logout,
-                        color: AppColors.error,
-                        size: 20,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Log Out',
-                        style: AppTextStyle().boldTextStyle(
-                          fontSize: 14.sp,
-                          color: AppColors.error,
+              // Logout Button (Only shown when logged in)
+              StreamBuilder<UserModel?>(
+                stream: repository.currentUserStream,
+                initialData: repository.currentUser,
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) return const SizedBox.shrink();
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 48.h,
+                    child: OutlinedButton(
+                      onPressed: authController.logout,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.error),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
                         ),
                       ),
-                    ],
-                  ),
-                ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Iconsax.logout,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            'Log Out',
+                            style: AppTextStyle().boldTextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),

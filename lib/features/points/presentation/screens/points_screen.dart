@@ -16,22 +16,89 @@ class PointsScreen extends StatelessWidget {
         ? Get.find<PointsController>()
         : Get.put(PointsController());
 
+    final isWideWeb = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
-        elevation: 0,
-        title: Text(
-          'VIP Club & Rewards',
-          style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
-        ),
-      ),
+      appBar: isWideWeb
+          ? null
+          : AppBar(
+              backgroundColor: AppColors.darkBackground,
+              elevation: 0,
+              title: Text(
+                'VIP Club & Rewards',
+                style: AppTextStyle().boldTextStyle(fontSize: 18.sp, color: Colors.white),
+              ),
+            ),
       body: ResponsiveLayout(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWideWeb ? 24 : 16.w,
+            vertical: isWideWeb ? 24 : 8.h,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (isWideWeb) ...[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F1524).withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: const Color(0xFF222C40)),
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF162035).withValues(alpha: 0.7),
+                        const Color(0xFF0C1019).withValues(alpha: 0.5),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                        ),
+                        child: const Icon(Iconsax.crown, color: AppColors.gold, size: 28),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'VIP CLUB & REWARDS',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.6,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Level up your rank, unlock weekly rakeback and luxury status gifts',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF8B9CB5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               // Tier Hero Card wrapped in RepaintBoundary
               RepaintBoundary(child: _buildTierHeroCard(context, controller)),
               SizedBox(height: 16.h),

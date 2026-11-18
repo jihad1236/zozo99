@@ -21,6 +21,8 @@ class LandingScreen extends StatelessWidget {
         ? Get.find<LandingController>()
         : Get.put(LandingController());
 
+    final isWideWeb = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0D14),
       body: SafeArea(
@@ -37,19 +39,25 @@ class LandingScreen extends StatelessWidget {
               ),
               padding: EdgeInsets.zero,
               children: [
-                // 1. Header (Logo & Balance/Auth)
-                RepaintBoundary(
-                  child: LandingHeader(controller: controller),
-                ),
+                // 1. Header (Logo & Balance/Auth) - only on mobile since web has WebTopMenuBar
+                if (!isWideWeb)
+                  RepaintBoundary(child: LandingHeader(controller: controller)),
 
                 // 2. Hero Carousel (Isolated sliding animations)
-                RepaintBoundary(
-                  child: LandingHeroCarousel(controller: controller),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
+                  child: RepaintBoundary(
+                    child: LandingHeroCarousel(controller: controller),
+                  ),
                 ),
 
                 // 3. Static Live Ticker Marquee
-                const RepaintBoundary(
-                  child: LandingTicker(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18.0),
+                  child: const RepaintBoundary(child: LandingTicker()),
                 ),
 
                 // 4. Interactive Category Bar
@@ -63,24 +71,16 @@ class LandingScreen extends StatelessWidget {
                 ),
 
                 // 6. VIP Club Section (Cached static layout)
-                const RepaintBoundary(
-                  child: LandingVipSection(),
-                ),
+                const RepaintBoundary(child: LandingVipSection()),
 
                 // 7. Official Sponsorships (Cached static layout)
-                const RepaintBoundary(
-                  child: LandingSponsorships(),
-                ),
+                const RepaintBoundary(child: LandingSponsorships()),
 
                 // 8. Brand Ambassadors (Cached static layout)
-                const RepaintBoundary(
-                  child: LandingAmbassadors(),
-                ),
+                const RepaintBoundary(child: LandingAmbassadors()),
 
                 // 9. Multi-Column Footer & Compliance
-                const RepaintBoundary(
-                  child: LandingFooter(),
-                ),
+                const RepaintBoundary(child: LandingFooter()),
               ],
             ),
           ),

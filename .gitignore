@@ -20,7 +20,6 @@ migrate_working_dir/
 .idea/
 
 # VS Code
-.vscode/
 
 # Flutter / Dart / Pub related
 **/doc/api/
@@ -64,5 +63,6 @@ android/.gradle/
 # Vercel & Environment variables
 .vercel/
 **/.vercel
-.env*
 !.env.example
+config.bat
+node_modules
