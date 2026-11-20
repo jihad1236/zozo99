@@ -121,6 +121,21 @@ class MockBettingRepository extends GetxService implements BettingRepository {
   void _seedInitialData() {
     final now = DateTime.now();
 
+    final testUser = UserModel(
+      uid: 'user_test_01',
+      email: 'testuser1@gmail.com',
+      phone: '+880 1700 000001',
+      username: 'testuser1',
+      role: UserRole.customer,
+      status: UserStatus.active,
+      points: 2500,
+      tier: VipTier.gold,
+      avatarUrl:
+          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+      createdAt: now.subtract(const Duration(days: 10)),
+      updatedAt: now,
+    );
+
     final customer = UserModel(
       uid: 'user_customer_01',
       email: 'user@zozo99.com',
@@ -177,9 +192,18 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       updatedAt: now,
     );
 
-    _allUsers.assignAll([customer, admin, player2, player3]);
+    _allUsers.assignAll([testUser, customer, admin, player2, player3]);
 
     // Initial Wallets
+    _userWallets[testUser.uid] = WalletModel(
+      uid: testUser.uid,
+      cashBalance: 1500.0,
+      creditBalance: 12500.0,
+      totalDeposited: 2000.0,
+      totalWithdrawn: 500.0,
+      updatedAt: now,
+    );
+
     _userWallets[customer.uid] = WalletModel(
       uid: customer.uid,
       cashBalance: 320.0,
@@ -216,9 +240,9 @@ class MockBettingRepository extends GetxService implements BettingRepository {
       updatedAt: now,
     );
 
-    // Default active user is Guest (null) - user must sign up or log in
-    _currentUser.value = null;
-    _currentWallet.value = null;
+    // Default active user is testUser (testuser1@gmail.com)
+    _currentUser.value = testUser;
+    _currentWallet.value = _userWallets[testUser.uid];
 
     // Seed Games
     _games.assignAll([

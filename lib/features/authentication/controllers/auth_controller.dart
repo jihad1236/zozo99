@@ -14,10 +14,10 @@ class AuthController extends GetxController {
   final RxBool isPasswordVisible = false.obs;
 
   // Form Controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final usernameController = TextEditingController();
-  final phoneController = TextEditingController();
+  final emailController = TextEditingController(text: 'testuser1@gmail.com');
+  final passwordController = TextEditingController(text: 'Test123456@');
+  final usernameController = TextEditingController(text: 'testuser1');
+  final phoneController = TextEditingController(text: '+880 1700 000001');
 
   bool get isLoggedIn => user.value != null;
   bool get isAdmin => user.value?.isAdmin ?? false;
