@@ -12,15 +12,9 @@ linux
 macos
 windows
 
-# Source code (already compiled into build/web)
+# Source code (already compiled into web)
 lib
 test
-
-# Raw assets (already bundled into build/web by flutter build)
-assets
-
-# Source web template (the built version is in build/web)
-web
 
 # Documentation and IDE files
 *.md
@@ -30,7 +24,7 @@ devtools_options.yaml
 analysis_options.yaml
 .vscode
 
-# Pubspec files (not needed for static deploy)
+# Pubspec files
 pubspec.yaml
 pubspec.lock
 
