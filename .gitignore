@@ -68,3 +68,4 @@ android/.gradle/
 config.bat
 node_modules
 .vercel
+.env*
