@@ -12,11 +12,15 @@ linux
 macos
 windows
 
-# Source code and raw assets (already compiled into build/web)
+# Source code (already compiled into build/web)
 lib
-assets
-web
 test
+
+# Raw assets (already bundled into build/web by flutter build)
+assets
+
+# Source web template (the built version is in build/web)
+web
 
 # Documentation and IDE files
 *.md
@@ -24,11 +28,11 @@ test
 *.iml
 devtools_options.yaml
 analysis_options.yaml
+.vscode
 
-# Build artifacts (ignore everything in build EXCEPT build/web)
-build/*
-!build/web
-!build/web/**
+# Pubspec files (not needed for static deploy)
+pubspec.yaml
+pubspec.lock
 
 # Ignore Vercel internal output/cache
 .vercel
